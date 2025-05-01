@@ -1,0 +1,64 @@
+<?php
+// Database connection
+$servername = "localhost";
+$username = "root"; // Replace with your database username
+$password = "";     // Replace with your database password
+$dbname = "food_recommend_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Start session
+session_start();
+
+// Retrieve and sanitize user inputs
+$user_input = mysqli_real_escape_string($conn, $_POST['username']);
+$password = $_POST['password'];
+
+// Query database for user
+$sql = "SELECT * FROM users WHERE username = '$user_input'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // Fetch user data
+    $user = $result->fetch_assoc();
+    $hashed_password = $user['password']; // Password from database
+    // Verify password
+    if (password_verify($password, $hashed_password)) {
+        // Password matches, login successful
+        $_SESSION['user_id'] = $user['users_id'];
+        $_SESSION['username'] = $user['username'];
+
+        // Check if health profile exists
+        $user_id = $_SESSION['user_id'];
+        $profile_check_sql = "SELECT * FROM profiles WHERE users_id = ?";
+        $stmt_profile = $conn->prepare($profile_check_sql);
+        $stmt_profile->bind_param("i", $user_id);
+        $stmt_profile->execute();
+        $result_profile = $stmt_profile->get_result();
+        
+        if ($result_profile->num_rows > 0) {
+            // มีข้อมูล health profile แล้ว -> ไปหน้า index
+            header("Location: index.php");
+        } else {
+            // ยังไม่มี health profile -> ไปหน้า health_profile.php
+            header("Location: health_profile.php");
+        }
+        exit();
+    } else {
+        // Password incorrect
+        header("Location: loginform.php?status=2");
+        exit();
+    }
+} else {
+    // Email not found
+    header("Location: loginform.php?status=1");
+    exit();
+}
+
+$conn->close();
+?>

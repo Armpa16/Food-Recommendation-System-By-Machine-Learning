@@ -1,0 +1,809 @@
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  width: 100%;
+  background-color: #CCD2DE;
+}
+.bar{
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  flex-shrink: 0;
+}
+.custom-nav {
+  width: 100%;          /* ปรับให้เต็มความกว้าง */
+  padding: 12px 15px;   /* ปรับขนาด padding */
+  border-radius: 0 !important; /* ลบขอบโค้ง */
+}
+.text-center{
+  height: 160px;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+.container{
+  width: 100%;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  height: auto;
+}
+.fa-solid .fa-circle-user{
+  font-size: 100px;
+}
+.mb-3 a{
+  padding-left: 45px;
+  font-size: 18px;
+}
+.mt-auto{
+  font-size: 18px;
+}
+.mt-auto a{
+  margin-top: 620px;
+}
+.nav-link.active{
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 !important;
+}
+.content{
+  display: flex;
+  flex-direction: column;
+  padding-left: 150px;
+}
+.content h1{
+  margin-top: 50px;
+  font-weight: bold;
+  font-size: 20px;
+}
+.boxtop{
+  display: flex;
+  justify-content: space-between;
+}
+.boxtop button{
+  width: 120px;
+  height: 40px;
+  font-size: 16px;
+  margin-top: 45px;
+  background-color: #4f46e5;
+  transition: all 0.3s ease; /* เพิ่ม transition */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+}
+.boxtop button:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background-color: #4A6BFF; /* เปลี่ยนสีพื้นหลังให้เด่นขึ้น */
+  color: #ffffff;
+}
+.calendar-container {
+  position: relative;
+  width: 950px;
+  height: 125px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease; /* เพิ่ม transition */
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-container:hover {
+  transform: scale(1.02); /* ขยายให้เห็นชัดเจน */
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.calendar-slider {
+  display: flex;
+  transition: transform 0.5s ease;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-slider .calendar {
+  width: 750px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
+  background-color: #fff;
+}
+
+.control-button {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  margin: 15px;
+}
+.control-button:hover {
+  transform: scale(1.15); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background-color: #4A6BFF; /* เปลี่ยนสีพื้นหลังให้เด่นขึ้น */
+  color: #ffffff;
+}
+
+.control-button i {
+  font-size: 18px;
+}
+.days {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px; /* ระยะห่างระหว่างวัน */
+  margin-top: -5px;
+}
+
+.day {
+  flex: 1; /* ทำให้ขนาดของแต่ละวันเท่ากัน */
+  text-align: center;
+  font-weight: bold;
+  max-width: 40px; /* จำกัดขนาดไม่ให้ใหญ่เกิน */
+  height: 40px;
+}
+
+.dates {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px; /* ระยะห่างระหว่างตัวเลขวันที่ */
+}
+
+.dates div {
+  flex: 1; /* ให้ขนาดของแต่ละวันเท่ากัน */
+  max-width: 40px; /* จำกัดขนาดไม่ให้ใหญ่เกิน */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+}
+.dates div:hover {
+  transform: scale(1.15); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background-color: #4A6BFF; /* เปลี่ยนสีพื้นหลังให้เด่นขึ้น */
+  color: #ffffff;
+}
+.today {
+  background-color: #4A6BFF;
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease;
+}
+.today:hover, .today:focus {
+  background-color: #3650d0;
+}
+.selected-day {
+  background-color: #4A6BFF; /* สีแดงส้มเมื่อเลือก */
+  color: white;
+  border-radius: 50%;
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+
+/* Submit button */
+.submit-btn {
+  display: block;
+  width: 200px;
+  margin: 20px auto;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+}
+.submit-btn:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background-color: #3f9342;
+  color: #ffffff;
+}
+/* edit-btn button */
+.edit-btn {
+  display: block;
+  width: 200px;
+  margin: 20px auto;
+  padding: 12px;
+  background-color: #FFC107;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+}
+.edit-btn:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background-color: #ecb307;
+  color: #ffffff;
+}
+
+/* ส่วนของอาหารที่แนะนำ */
+.meals-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.meal-section {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* หัวข้อของมื้ออาหาร */
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.meal-calories {
+  color: #28a745;
+  font-weight: bold;
+  margin-left: 600px;
+}
+
+.add-food-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.add-food-btn:hover{
+  transform: scale(1.10); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background: #1c8d36;
+}
+.add-food {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 220px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);}
+.add-food:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background: #1c8d36;
+}
+.delete-food-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 220px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+/* .fa-trash{
+  font-size: 15px;
+} */
+.delete-food-btn:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background: #c4303f;
+}
+
+/* รายการอาหาร */
+.meal-body {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.food-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  width: 285px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative; /* ให้ตัวการ์ดเป็นจุดอ้างอิง */
+}
+.food-card:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+}
+
+
+.food-image {
+  width: 100%;
+  height: 165px;
+  border-radius: 10px;
+  object-fit: cover; /* ป้องกันภาพเบี้ยว */
+  /* object-position: center; */
+}
+
+.food-info {
+  padding: 2px;
+  margin-top: 10px;
+}
+
+.food-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.food-calories {
+  color: #ff6b6b;
+  font-size: 14px;
+}
+
+.food-nutrients {
+  font-size: 14px;
+  color: #666;
+}
+
+.food-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.remove-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.food-selection-popup {
+  background-color: white;
+  border-radius: 8px;
+  width: 960px;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.popup-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.close-popup-btn {
+  background: none;
+  border: none;
+  font-size: 40px;
+  cursor: pointer;
+  color: #e32323;
+}
+.close-popup-btn:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  color: #be1f1f;
+}
+
+.popup-search {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+#food-search {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+.popup-content {
+  padding: 15px 20px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.meal-category {
+  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.food-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.food-list-item {
+  display: flex;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.food-list-image {
+  width: 80px;
+  height: 80px;
+}
+
+.food-list-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.food-list-info {
+  flex-grow: 1;
+  padding: 10px;
+}
+
+.food-list-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.food-list-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.food-list-action {
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+}
+.food-actions span{
+  font-weight: bold;
+}
+.add-food-item-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.popup-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-food-btn {
+  background-color: #f1f1f1;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #555;
+  margin-right: 20px;
+}
+.submit-food-btn:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background-color: #e3e3e3;
+}
+.cancel-food-btn {
+  background-color: #f1f1f1;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #555;
+}
+.cancel-food-btn:hover{
+  transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+  transition: all 0.5s ease;
+  cursor: pointer;
+  background-color: #e3e3e3;
+}
+
+.food-loading, .no-foods, .error-message {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 4px;
+  color: white;
+  z-index: 1100;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease-out;
+}
+
+.notification.success {
+  background-color: #4CAF50;
+}
+
+.notification.error {
+  background-color: #F44336;
+}
+
+.notification.info {
+  background-color: #2196F3;
+}
+
+@keyframes slideIn {
+  from {
+      transform: translateY(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateY(0);
+      opacity: 1;
+  }
+}
+
+/* ป้อปอัพสารอาหาร */
+.popup2-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+  opacity: 0; 
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.popup2-overlay.food-details-overlay { /* ใช้ class เฉพาะ */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease, visibility 0s linear 0s;
+}
+
+.food-details-popup {
+  background-color: #ffffff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 750px; 
+  max-height: 90vh; 
+  overflow-y: auto; 
+  position: relative;
+  transform: scale(0.9); 
+  transition: transform 0.3s ease;
+}
+
+.popup-overlay.food-details-overlay .food-details-popup {
+   transform: scale(1); 
+}
+
+body > div.popup2-overlay.food-details-overlay > div > div.popup-header > button{
+  font-size: 35px;
+}
+
+.food-details-popup .popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.food-details-popup .popup-header h3 {
+  margin: 0;
+  font-size: 1.4em;
+  color: #333;
+  font-weight: bold;
+}
+
+.food-details-popup .close-popup-btn {
+  background: none;
+  border: none;
+  font-size: 1.8em; 
+  color: #aaa;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1; 
+}
+.food-details-popup .close-popup-btn:hover {
+  color: #777;
+}
+
+
+.food-details-popup .popup-content {
+  text-align: center; 
+}
+
+.food-details-popup .popup-food-image {
+  max-width: 80%;
+  height: auto;
+  max-height: 250px; 
+  border-radius: 8px;
+  margin-bottom: 20px;
+  object-fit: cover;
+  border: 1px solid #eee;
+}
+
+.food-details-popup h4 {
+  text-align: left;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 20px;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 5px;
+  font-weight: bold;
+}
+
+body > div.popup2-overlay.food-details-overlay > div > div.popup-content > h4 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.food-details-popup .nutrition-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.food-details-popup .nutrition-list li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #444;
+  display: flex;
+  align-items: center;
+}
+
+.food-details-popup .nutrition-list li i {
+  margin-right: 10px;
+  color: #007bff; /* Or your theme color */
+  width: 20px; /* Fixed width for icons */
+  text-align: center;
+}
+
+.food-details-popup .nutrition-list li strong {
+  margin-left: auto; /* Push value to the right */
+  color: #ff0000;
+  padding-left: 10px; /* Add some space */
+  font-weight: 500;
+}
+
+.food-details-popup .food-description {
+  text-align: left;
+  margin-top: 20px;
+  color: #666;
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+
+
+.food-details-popup .popup-footer {
+  text-align: right;
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.food-details-popup .close-popup-btn-footer {
+  background-color: #6c757d; /* Gray color */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease;
+}
+
+.food-details-popup .close-popup-btn-footer:hover {
+  background-color: #5a6268;
+}
+
+
+/* Loading Spinner CSS */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7); /* Lighter overlay for loading */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; /* Higher than other popups */
+}
+
+.loading-spinner {
+display: inline-block;
+position: relative;
+width: 80px;
+height: 80px;
+}
+.loading-spinner div {
+box-sizing: border-box;
+display: block;
+position: absolute;
+width: 64px;
+height: 64px;
+margin: 8px;
+border: 8px solid #007bff; /* Your theme color */
+border-radius: 50%;
+animation: loading-spinner 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+border-color: #007bff transparent transparent transparent;
+}
+
+

@@ -1,0 +1,205 @@
+<?php
+session_start();
+
+// เชื่อมต่อฐานข้อมูล
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "food_recommend_system";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// ตรวจสอบการเชื่อมต่อ
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// ตรวจสอบการเข้าสู่ระบบ
+if (!isset($_SESSION['username'])) {
+    header("Location: loginform.php");
+    exit();
+}
+
+// ดึงข้อมูลจากฐานข้อมูล
+$username = $_SESSION['username']; // Get the username from session
+
+// 🔥 JOIN users กับ health_profile โดยใช้ user_id
+$sql = "SELECT u.email, p.daily_calorie, p.age, p.gender, p.weight, p.height, p.activity_level, p.bmi, p.status_bmi, p.diseases
+        FROM users u 
+        JOIN profiles p ON u.users_id = p.users_id 
+        WHERE u.username = ?";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $_SESSION['email'] = $row['email'];  // Set email in session
+    $daily_calorie = $row['daily_calorie'];
+    $age = $row['age'];
+    $gender = $row['gender'];
+    $weight = $row['weight'];
+    $height = $row['height'];
+    $activity_level = $row['activity_level'];
+    $bmi = $row['bmi'];
+    $status_bmi = $row['status_bmi'];
+    $diseases = $row['diseases'];
+} else {
+    $daily_calorie = "ไม่ระบุ";
+    $age = "ไม่ระบุ";
+    $gender = "ไม่ระบุ";
+    $weight = "ไม่ระบุ";
+    $height = "ไม่ระบุ";
+    $activity_level = "ไม่ระบุ";
+    $bmi = "ไม่ระบุ";
+    $status_bmi = "ไม่ระบุ";
+    $diseases = "ไม่ระบุ";
+}
+
+// ปิดการเชื่อมต่อ
+$stmt->close();
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <link rel="stylesheet" href="css/profile.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- เเถบบาร์ด้านข้าง -->
+        <div class="bar flex-column p-0" style="width: 310px; height: auto;">
+            <div class="text-center py-4">
+                <i class="fa-solid fa-circle-user fs-1"></i>
+                <div class="fs-4 mt-2" style="font-size: 25px; font-weight:bold;"><?php echo htmlspecialchars($_SESSION['username']);?></div>
+            </div>
+            <!-- เมนู -->
+            <ul class="nav nav-pills flex-column px-0">
+                <li class="nav-item mb-3">
+                    <a href="index.php" class="nav-link link-body-emphasis custom-nav">
+                        <i class="fa-solid fa-house"></i>&nbsp;&nbsp;&nbsp;&nbsp;หน้าหลัก
+                    </a>
+                </li>
+                <li class="mb-3">
+                    <a href="recommendfood.php" class="nav-link link-body-emphasis custom-nav">
+                        <i class="fa-solid fa-bowl-food"></i>&nbsp;&nbsp;&nbsp;&nbsp;การแนะนำอาหาร
+                    </a>
+                </li>
+                <li class="mb-3">
+                    <a href="calendar.php" class="nav-link link-body-emphasis custom-nav">
+                        <i class="fa-regular fa-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp;ปฏิทินการรับประทานอาหาร
+                    </a>
+                </li>
+                <li class="mb-3">
+                    <a href="profile.php" class="nav-link active custom-nav">
+                        <i class="fa-regular fa-circle-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;โปรไฟล์
+                    </a>
+                </li>
+            </ul>
+            <li class="mt-auto text-center ">
+                <a href="loginform.php" class="nav-link link-body-emphasis custom-nav">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;&nbsp;ออกจากระบบ
+                </a>
+            </li>
+        </div>
+
+
+        <div class="content">
+            <!-- เนื้อหา -->
+            <div class="card">
+                <div class="user-header">
+                    <div class="user-pic">
+                        <div class="user-icon"><i class="fa-solid fa-user"></i></div>
+                    </div>
+                    <div class="user-info">
+                        <h2><?php echo htmlspecialchars($_SESSION['username']);?></h2>
+                        <p><?php echo htmlspecialchars($_SESSION['email']);?></p>
+                    </div>
+                    <button class="edit-btn">แก้ไข</button>
+                </div>
+
+                <form id="profileForm" method="POST" action="connectDB/update_profile.php">
+                    <div class="form-group">
+                        <label class="form-label">เพศ</label>
+                        <select class="select-control" name="gender">
+                            <option value="ชาย" <?php echo ($gender == 'ชาย') ? 'selected' : ''; ?>>ชาย</option>
+                            <option value="หญิง" <?php echo ($gender == 'หญิง') ? 'selected' : ''; ?>>หญิง</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">อายุ</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" class="form-control" name="age" value="<?php echo $age; ?>" placeholder="อายุ">
+                            </div>
+                            <div class="col">
+                                <span style="line-height: 45px;">ปี</span>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" name="weight" value="<?php echo $weight; ?>" placeholder="น้ำหนัก" id="weight">
+                            </div>
+                            <div class="col">
+                                <span style="line-height: 45px;">กก.</span>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" name="height" value="<?php echo $height; ?>" placeholder="ส่วนสูง" id="height">
+                            </div>
+                            <div class="col">
+                                <span style="line-height: 45px;">ซม.</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-box2">
+                        <label class="form-label">ระดับการทำกิจกรรม</label>
+                        <select class="select-control" name="activity_level">
+                            <option value="น้อย" <?php echo ($activity_level == 'น้อย') ? 'selected' : ''; ?>>น้อย</option>
+                            <option value="ปานกลาง" <?php echo ($activity_level == 'ปานกลาง') ? 'selected' : ''; ?>>ปานกลาง</option>
+                            <option value="มาก" <?php echo ($activity_level == 'มาก') ? 'selected' : ''; ?>>มาก</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group-diseases">
+                        <div class="form-box">
+                            <label class="form-label">โรคประจำตัว</label>
+                            <!-- <div class="select-control" name="diseases"> -->
+                            <?php 
+                                // ตรวจสอบว่า $diseases ไม่ใช่ 'ไม่ระบุ' และไม่ว่าง
+                                $diseasesArray = ($diseases !== "ไม่ระบุ" && !empty($diseases)) ? array_map('trim', explode(',', $diseases)) : [];
+
+                            ?>
+                            <input type="checkbox" name="diseases[]" value="ไม่มีโรค" 
+                                <?php echo (in_array('ไม่มีโรค', $diseasesArray)) ? 'checked' : ''; ?>> ไม่มีโรค
+
+                            <input type="checkbox" name="diseases[]" value="โรคเบาหวาน" 
+                                <?php echo (in_array('โรคเบาหวาน', $diseasesArray)) ? 'checked' : ''; ?>> โรคเบาหวาน
+
+                            <input type="checkbox" name="diseases[]" value="โรคความดันโลหิตสูง" 
+                                <?php echo (in_array('โรคความดันโลหิตสูง', $diseasesArray)) ? 'checked' : ''; ?>> โรคความดันโลหิตสูง
+
+                            <input type="checkbox" name="diseases[]" value="โรคหัวใจ" 
+                                <?php echo (in_array('โรคหัวใจ', $diseasesArray)) ? 'checked' : ''; ?>> โรคหัวใจ
+                        </div>
+                    </div>  
+
+                    <button type="submit" class="submit-btn">บันทึกข้อมูล</button>
+                </form>
+
+            </div>
+        </div>
+        <!-- content -->
+    </div>
+    <!-- container -->
+
+</body>
+</html>

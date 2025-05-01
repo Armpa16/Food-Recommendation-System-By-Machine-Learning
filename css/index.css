@@ -1,0 +1,262 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    width: 100%;
+    background-color: #CCD2DE;
+}
+.bar{
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    flex-shrink: 0;
+}
+.custom-nav {
+    width: 100%;          /* ปรับให้เต็มความกว้าง */
+    padding: 12px 15px;   /* ปรับขนาด padding */
+    border-radius: 0 !important; /* ลบขอบโค้ง */
+}
+.text-center{
+    height: 160px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+.container{
+    width: 100%;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    height: 1150px;
+}
+.fa-solid .fa-circle-user{
+    font-size: 100px;
+}
+.mb-3 a{
+    padding-left: 45px;
+    font-size: 18px;
+}
+.mt-auto{
+    font-size: 18px;
+}
+.mt-auto a{
+    margin-top: 620px;
+}
+.nav-link.active{
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0 !important;
+}
+.content{
+    display: flex;
+    flex-direction: column;
+    padding-left: 150px;
+}
+.content h1{
+    margin-top: 50px;
+    font-weight: bold;
+    font-size: 20px;
+}
+.showinfo{
+    margin-top: 20px;
+    width: 910px;
+    height: 370px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.info_user{
+    width: 640px;
+    height: 370px;
+    border-radius: 10px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+}
+.info_user h1{
+    font-size: 18px;
+    margin-top: 20px;
+    margin-left: 32px;
+}
+.info_user:hover{
+    transform: scale(1.02);
+    transition: transform 0.50s ease;
+    cursor: pointer;
+}
+.calorie_show{
+    width: 640px;
+    height: 270px;
+    display: flex;
+    justify-content: space-between;
+    padding: 40px;
+    align-items: center;
+    font-size: 18px;
+    border-radius: 20px 20px 0 0; /* ปรับขอบมนเฉพาะขอบล่าง */
+    margin-top: -30px;
+}
+.calorie_show .cercle{
+    width: 100px;
+    height: 100px;
+    background-color: #DFF9A2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    font-size: 40px; 
+    color: rgb(53, 53, 53); 
+}
+.calorie_show p{
+    margin-top: 45px;
+}
+.progress{
+    width: 390px;
+    height: 40px;
+    background-color: #CCD2DE;
+    margin-top: 10px;
+}
+.statusinfo_show{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 640px;
+    height: 100px;
+    background-color: #A9ACBF;
+    margin-top: -43px;
+    padding-top: 8px;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 0 0 10px 10px; /* ปรับขอบมนเฉพาะขอบล่าง */
+}
+.box-small{
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+}
+span p{
+    padding-top: 10px;
+    color: #555555;
+}
+.bmi{
+    width: 250px;
+    height: 175px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255); 
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+}
+.bmi:hover{
+    transform: scale(1.05);
+    transition: transform 0.50s ease;
+    cursor: pointer;
+}
+.bmi h1{
+    font-size: 18px;
+    margin-top: 20px;
+    margin-left: 18px;
+}
+.bmi_show{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+}
+.bmi_show .cercle{
+    width: 70px;
+    height: 70px;
+    background-color: #FFCB65;
+    border-radius: 50%;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    color: rgb(53, 53, 53); 
+    margin-left: -15px;
+}
+.dis{
+    width: 250px;
+    height: 175px;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255); 
+    margin-top: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+}
+.dis:hover{
+    transform: scale(1.05);
+    transition: transform 0.50s ease;
+    cursor: pointer;
+}
+.dis h1{
+    font-size: 18px;
+    margin-top: 20px;
+    margin-left: 18px;
+}
+.diseases_show{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+}
+.diseases_show .cercle{
+    width: 70px;
+    height: 70px;
+    background-color: #FFA157;
+    border-radius: 50%;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    color: rgb(53, 53, 53);
+    flex-shrink: 0; /* ป้องกันการบีบรูปทรง */ 
+    margin-left: 20px;
+}
+.disease-list {
+    font-size: 16px;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px; /* ระยะห่างระหว่างโรค */
+    word-wrap: break-word;
+}
+
+.disease-list span::after {
+    content: ", ";
+}
+
+.disease-list span:last-child::after {
+    content: ""; /* ไม่ให้เครื่องหมายลูกน้ำแสดงหลังคำสุดท้าย */
+}
+h1{
+    font-size: 20px;
+    font-weight: bold;
+}
+.cal_day:hover{
+    transform: scale(1.01);
+    transition: transform 0.50s ease;
+    cursor: pointer;
+}
+.chart-container {
+    width: 100%;
+    max-width: 910px;
+    margin: auto;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+}
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.calendar-controls span{
+    font-size: 18px;
+}
+.calendar-controls button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.calendar-controls button:hover {
+    background: #2563eb;
+}

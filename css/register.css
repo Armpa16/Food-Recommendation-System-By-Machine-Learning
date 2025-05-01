@@ -1,0 +1,65 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+}
+.box_left{
+    width: 40%;
+    height: 1024px;
+}
+.box_right{
+    width: 60%;
+    height: 1024px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+.box_right form {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+}
+h1{
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+input{
+    width: 410px;
+    height: 50px;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+button{
+    width: 425px;
+    height: 55px;
+    border-radius: 8px;
+    background-color: #4A6BFF;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    align-items: center; 
+    cursor: pointer;
+}
+a{
+    width: 420px;
+    height: 50px;
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    border: 2px solid #4A6BFF;
+    text-decoration: none;
+}
+.regis{
+    display: flex;
+    color: #b7b7b7;
+}
+.regis hr{
+    width: 100px;
+    height: 0.1px;
+    border: 1px solid #C2C2C2;
+}

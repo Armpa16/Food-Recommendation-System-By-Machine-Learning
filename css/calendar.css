@@ -1,0 +1,186 @@
+/* c:\xampp\htdocs\Food2\css\calendar.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    width: 100%;
+    background-color: #CCD2DE;
+}
+
+.bar {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    flex-shrink: 0;
+}
+
+.custom-nav {
+    width: 100%;
+    /* ปรับให้เต็มความกว้าง */
+    padding: 12px 15px;
+    /* ปรับขนาด padding */
+    border-radius: 0 !important;
+    /* ลบขอบโค้ง */
+}
+
+.text-center {
+    height: 160px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    height: auto; /* Changed from 1150px to auto */
+}
+
+.fa-solid .fa-circle-user {
+    font-size: 100px;
+}
+
+.mb-3 a {
+    padding-left: 45px;
+    font-size: 18px;
+}
+
+.mt-auto {
+    font-size: 18px;
+}
+
+.mt-auto a {
+    margin-top: 620px;
+}
+
+.nav-link.active {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 0 !important;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    padding-left: 150px;
+    width: 100%;
+    align-items: center;
+    
+}
+
+.content h1 {
+    margin-top: 50px;
+    font-weight: bold;
+    font-size: 25px;
+}
+.status{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.over-cal{
+    background-color: #D90000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.perfect-cal{
+    background-color: #00B23B;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.under-cal{
+    background-color: #F8B200;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+/* .box_calen{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    /* margin-bottom: 20px; */
+    width: 800px;
+    height: 80px;
+    background-color: #4A6BFF;
+    padding: 30px;
+}
+
+.calendar-header button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 25px;
+    margin: 0 10px;
+    color: #FFFFFF; /* Add color */
+}
+.calendar-header button:hover{
+    transform: scale(1.10); /* ขยายให้เห็นความเปลี่ยนแปลง */
+    transition: all 0.5s ease;
+    cursor: pointer;
+
+}
+
+.calendar-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #FFFFFF; /* Add color */
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-row {
+    display: flex;
+}
+.calendar-cell {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #eee;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.calendar-cell:hover{
+    transform: scale(1.05); /* ขยายให้เห็นความเปลี่ยนแปลง */
+    transition: all 0.5s ease;
+    cursor: pointer;
+    font-weight: bold;
+    color: #4d4d4d;
+    
+}
+
+.day-names {
+    font-weight: bold;
+    background-color: #f5f5f5;
+}
+
+.over-calories {
+    background-color: #D90000;
+}
+
+.perfect-calories {
+    background-color: #00B23B;
+}
+
+.under-calories {
+    background-color: #F8B200;
+}
