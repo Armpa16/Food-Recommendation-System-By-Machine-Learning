@@ -5,7 +5,7 @@ body, html {
     display: flex;
 }
 .box_left{
-    width: 40%;
+    width: 50%;
     height: 1024px;
     display: flex;
     justify-content: center;
@@ -18,7 +18,7 @@ body, html {
     align-items: center; 
 }
 h1{
-    font-size: 30px;
+    font-size: 35px;
     font-weight: bold;
     text-align: center;
 }
@@ -34,10 +34,14 @@ button{
     border-radius: 8px;
     background-color: #4A6BFF;
     color: white;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: bold;
     align-items: center; 
     cursor: pointer;
+}
+button:hover{
+    background-color: #3A5BFF;
+    color: white;
 }
 a{
     width: 420px;
@@ -49,6 +53,11 @@ a{
     align-items: center; 
     border: 2px solid #4A6BFF;
     text-decoration: none;
+    color: #4A6BFF;
+}
+a:hover{
+    background-color: #4A6BFF;
+    color: white;
 }
 .regis{
     display: flex;
@@ -60,6 +69,25 @@ a{
     border: 1px solid #C2C2C2;
 }
 .box_right{
-    width: 60%;
+    width: 50%;
     height: 1024px;
+    background-color: #4A6BFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.box_right h1{
+    color: white;
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 6px;
+}
+.box_right p{
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 30px;
+    letter-spacing: 1.5px;
 }

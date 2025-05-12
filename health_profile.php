@@ -22,7 +22,7 @@ if (isset($_SESSION['username'])) {
 <body>
     <div class="health_data">
         <a href="loginform.php"><i class="fa-solid fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;ย้อนกลับ</a>
-        <h1>กรุณากรอกข้อมูลเกี่ยวกับตัวคุณ</h1>
+        <h1>กรุณากรอกข้อมูลของคุณ</h1>
         <p>เพื่อให้เราเเนะนำอาหารที่เหมาะสมสำหรับคุณ</p><br><br>
         <form method="POST" action="save_health_data.php">
             <div class="input_gender">
@@ -48,10 +48,10 @@ if (isset($_SESSION['username'])) {
             </div>
             <div class="input_diseases">
                 <span>โรคประจำตัว:</span><br>
-                <input type="radio" name="diseases" value="ไม่มีโรค" required>&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="diseases" value="โรคเบาหวาน">&nbsp; โรคเบาหวาน &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="diseases" value="โรคความดันโลหิตสูง">&nbsp;โรคความดันโลหิตสูง &nbsp;&nbsp;&nbsp;
-                <input type="radio" name="diseases" value="โรคหัวใจ">&nbsp; โรคหัวใจ <br><br>
+                <input type="checkbox" name="diseases" value="ไม่มีโรค" required>&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="diseases" value="โรคเบาหวาน">&nbsp; โรคเบาหวาน &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="diseases" value="โรคความดันโลหิตสูง">&nbsp;โรคความดันโลหิตสูง &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="diseases" value="โรคหัวใจ">&nbsp; โรคหัวใจ <br><br>
             </div>
 
             <div class="input_activity_level">

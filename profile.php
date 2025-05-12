@@ -72,6 +72,7 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
     <link rel="stylesheet" href="css/profile.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 </head>
 <body>
     <div class="container">
@@ -200,6 +201,58 @@ $conn->close();
         <!-- content -->
     </div>
     <!-- container -->
+     
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // ป้องกันการ submit ฟอร์มแบบปกติ
+
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('.submit-btn');
+            submitButton.disabled = true; // ปิดการใช้งานปุ่มขณะส่งข้อมูล
+            submitButton.textContent = 'กำลังบันทึก...'; // เปลี่ยนข้อความปุ่ม
+
+            fetch(this.action, {
+                method: this.method,
+                body: formData
+            })
+            .then(response => response.json()) // คาดหวัง JSON response จาก server
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'สำเร็จ!',
+                        text: data.message || 'บันทึกข้อมูลสำเร็จ', // ใช้ข้อความจาก server หรือข้อความ default
+                        icon: 'success',
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Optional: รีโหลดหน้าเพื่อแสดงข้อมูลที่อัปเดต
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'เกิดข้อผิดพลาด!',
+                        text: data.message || 'ไม่สามารถบันทึกข้อมูลได้', // ใช้ข้อความจาก server หรือข้อความ default
+                        icon: 'error',
+                        confirmButtonText: 'ตกลง'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด!',
+                    text: 'เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์',
+                    icon: 'error',
+                    confirmButtonText: 'ตกลง'
+                });
+            })
+            .finally(() => {
+                 submitButton.disabled = false; // เปิดใช้งานปุ่มอีกครั้ง
+                 submitButton.textContent = 'บันทึกข้อมูล'; // คืนข้อความปุ่มเป็นเหมือนเดิม
+            });
+        });
+    </script>
 
 </body>
 </html>

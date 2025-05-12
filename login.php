@@ -1,8 +1,8 @@
 <?php
 // Database connection
 $servername = "localhost";
-$username = "root"; // Replace with your database username
-$password = "";     // Replace with your database password
+$username = "root"; 
+$password = "";     
 $dbname = "food_recommend_system";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

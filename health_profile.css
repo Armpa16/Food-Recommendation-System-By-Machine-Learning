@@ -34,10 +34,14 @@ input[type="number"] {
     width: 170px;
     height: 35px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 5px;
     padding-left: 10px;
 }
 input[type="radio"] {
+    width: 20px;
+    height: 20px;
+}
+input[type="checkbox"] {
     width: 20px;
     height: 20px;
 }
@@ -53,17 +57,25 @@ button{
     font-size: 20px;
     
 }
-/* button:hover{
-    background-color: #45e700;
+button:hover{
+    background-color: #3A5BFF;
     color: white;
     transition: background-color 0.3s;
-} */
+    transform:  scale(1.0);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
 a{
     width: 150px;
     height: 40px;
     font-size: 18px;
     text-decoration: none;
     color: #555555;
+}
+a:hover{
+    /* color: #4A6BFF; */
+    font-weight: bold;
+    transition: color 1.0s;
+    
 }
 h1, p{
     text-align: center;

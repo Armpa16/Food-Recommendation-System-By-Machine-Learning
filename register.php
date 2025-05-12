@@ -8,7 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <img class="box_left" src="img/pic_register.png" alt="">
+    <div class="box_left">
+        <div class="text_box">
+            <h1>เริ่มต้นสุขภาพที่ดีไปกับเรา</h1>
+            <p>สมัครสมาชิกเพื่อรับเมนูอาหารเฉพาะสำหรับคุณ<br>
+            เราพร้อมดูแลคุณในทุกมื้อ</p>
+        </div>
+    </div>
     <!-- box_left -->
 
     <div class="box_right">

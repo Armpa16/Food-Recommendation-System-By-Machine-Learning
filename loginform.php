@@ -39,7 +39,13 @@
         </form>  
     </div>
     <!-- box_left -->
-    <img class="box_right" src="img/pic_login.png" alt="">
+    <div class="box_right">
+        <div class="text_box">
+            <h1>ยินดีต้อนรับ!</h1>
+            <p>ดูแลสุขภาพของคุณ เริ่มต้นที่นี่<br>
+            เข้าสู่ระบบเพื่อรับคำแนะนำอาหารที่เหมาะกับคุณ</p>
+        </div>
+    </div>
     <!-- box_right -->
 </body>
 </html>
