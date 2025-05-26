@@ -13,7 +13,7 @@ if (isset($_SESSION['username'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <!-- <meta charset="UTF-8"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Health_Profile</title>
     <link rel="stylesheet" href="health_profile.css">
@@ -48,7 +48,8 @@ if (isset($_SESSION['username'])) {
             </div>
             <div class="input_diseases">
                 <span>โรคประจำตัว:</span><br>
-                <input type="checkbox" name="diseases" value="ไม่มีโรค" required>&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp;
+                <!-- <input type="checkbox" name="diseases" value="ไม่มีโรค" required>&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp; -->
+                <input type="checkbox" name="diseases" value="ไม่มีโรค">&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp;
                 <input type="checkbox" name="diseases" value="โรคเบาหวาน">&nbsp; โรคเบาหวาน &nbsp;&nbsp;&nbsp;
                 <input type="checkbox" name="diseases" value="โรคความดันโลหิตสูง">&nbsp;โรคความดันโลหิตสูง &nbsp;&nbsp;&nbsp;
                 <input type="checkbox" name="diseases" value="โรคหัวใจ">&nbsp; โรคหัวใจ <br><br>

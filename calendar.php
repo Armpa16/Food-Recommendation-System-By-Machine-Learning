@@ -50,7 +50,7 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
@@ -61,6 +61,9 @@ $conn->close();
 </head>
 <body>
     <div class="container">
+        <button id="sidebarToggle" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
         <!-- เเถบบาร์ด้านข้าง -->
         <div class="bar flex-column p-0" style="width: 310px; height: 1150px;">
             <div class="text-center py-4">
@@ -153,7 +156,7 @@ $conn->close();
         });
         calendar.appendChild(dayNamesRow);
 
-        // Create calendar grid
+        // สร้างตารางปฏิทิน
         let dayCounter = 1;
         for (let i = 0; i < 6; i++) { // Up to 6 weeks
             const calendarRow = document.createElement('div');
@@ -260,6 +263,42 @@ $conn->close();
             console.error('Error fetching meal status:', error);
         }
     }
+
+     // --- Sidebar Toggle JavaScript ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.bar');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    const icon = sidebarToggle.querySelector('i');
+                    if (sidebar.classList.contains('open')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // Close sidebar if clicking outside on mobile/tablet
+                document.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 992 && sidebar.classList.contains('open')) {
+                        const isClickInsideSidebar = sidebar.contains(event.target);
+                        const isClickOnToggler = sidebarToggle.contains(event.target);
+
+                        if (!isClickInsideSidebar && !isClickOnToggler) {
+                            sidebar.classList.remove('open');
+                            const icon = sidebarToggle.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+        });
+        // --- End Sidebar Toggle JavaScript ---
 
     renderCalendar(currentMonth, currentYear);
 </script>

@@ -33,7 +33,7 @@ if ($row['count'] == 0) {
 $stmtCheck->close();
 
 
-// Retrieve and sanitize user inputs
+// รับค่าจากฟอร์ม
 $gender = mysqli_real_escape_string($conn, $_POST['gender']);
 $age = mysqli_real_escape_string($conn, $_POST['age']);
 $weight = mysqli_real_escape_string($conn, $_POST['weight']);
@@ -41,10 +41,10 @@ $height = mysqli_real_escape_string($conn, $_POST['height']);
 $diseases = mysqli_real_escape_string($conn, $_POST['diseases']);
 $activity_level = mysqli_real_escape_string($conn, $_POST['activity_level']);
 
-// Calculate BMI
+// คำนวณ BMI
 $height_met = $height / 100;
 $bmi = $weight / ($height_met * $height_met);
-$bmi = round($bmi, 2); // Round to 2 decimal places
+$bmi = round($bmi, 2); // เปลี่ยนเป็นทศนิยม 2 ตำแหน่ง
 
 
 $status_bmi = '';
@@ -60,9 +60,9 @@ if ($bmi < 18.50) {
 
 $daily_calorie = '';
 if($gender == "ชาย") {
-    //cal bmr male
+    //คำนวณ BMR สำหรับเพศชาย
     $bmr = 66 + (13.7 * $weight) + (5 * $height) - (6.8 * $age);
-    //cal activity level
+    //คำนวณระดับกิจกรรม
     if($activity_level == "น้อย") {
         $daily_calorie = $bmr * 1.375;
     } elseif($activity_level == "ปานกลาง") {
@@ -71,9 +71,9 @@ if($gender == "ชาย") {
         $daily_calorie = $bmr * 1.7;
     }
 } elseif($gender == "หญิง") {
-    //cal bmr female
+    //คำนวณ BMR สำหรับเพศหญิง
     $bmr = 655 + (9.6 * $weight) + (1.8 * $height) - (4.7 * $age);
-    //cal activity level
+    //คำนวณระดับกิจกรรม
     if($activity_level == "น้อย") {
         $daily_calorie = $bmr * 1.375;
     } elseif($activity_level == "ปานกลาง") {
@@ -86,7 +86,7 @@ if($gender == "ชาย") {
 }
 
 
-// Insert data into the database
+// บันทึกข้อมูล
 $sql = "INSERT INTO profiles (users_id, gender, age, weight, height, diseases, activity_level, bmi, status_bmi, daily_calorie) 
         VALUES ($user_id,'$gender','$age','$weight','$height','$diseases','$activity_level','$bmi','$status_bmi','$daily_calorie')";
 

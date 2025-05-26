@@ -92,3 +92,91 @@ a:hover{
     height: 0px;
     border: 1px solid #C2C2C2;
 }
+
+@media (max-width: 900px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; /* Align to top */
+        min-height: 100vh;
+        padding-top: 20px; /* Add some padding at the top */
+    }
+
+    .box_left, .box_right {
+        width: 90% !important; /* Use !important to override existing styles if necessary */
+        margin: 10px 0;
+        height: auto; /* Adjust height automatically */
+        padding: 20px;
+    }
+
+    .box_right {
+        order: 2; /* Display login form below the welcome message on small screens */
+    }
+
+    .box_left {
+        order: 1;
+        text-align: center; /* Center text in the welcome box */
+        height: 300px;
+    }
+
+    .name {
+        margin-top: -20px; /* Add some margin at the top */
+    }
+
+    .box_left .text_box h1 {
+        font-size: 2.5em; /* Adjust font size for smaller screens */
+    }
+
+    .box_left .text_box p {
+        font-size: 1.5em; /* Adjust font size for smaller screens */
+    }
+
+    .box_right form h1 {
+        font-size: 1.8em; /* Adjust font size */
+    }
+
+    .box_right input[type="text"],
+    .box_right input[type="password"],
+    .box_right input[type="email"] {
+        width: 360px; /* Adjust width */
+    }
+
+    .box_right button,
+    .box_right a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .regis {
+        font-size: 0.9em;
+    }
+    .regis hr {
+        width: 80px; /* Adjust width */
+    }
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media (max-width: 600px) {
+    .box_left, .box_right {
+        width: 95% !important;
+        padding: 15px;
+    }
+
+    .box_left .text_box h1 {
+        font-size: 1.8em;
+    }
+
+    .box_left .text_box p {
+        font-size: 0.9em;
+    }
+
+    .box_right form h1 {
+        font-size: 1.5em;
+    }
+
+    .box_right label {
+        font-size: 0.9em;
+    }
+}
+

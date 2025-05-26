@@ -66,7 +66,7 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
@@ -76,6 +76,9 @@ $conn->close();
 </head>
 <body>
     <div class="container">
+        <button id="sidebarToggle" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
         <!-- เเถบบาร์ด้านข้าง -->
         <div class="bar flex-column p-0" style="width: 310px; height: auto;">
             <div class="text-center py-4">
@@ -136,26 +139,26 @@ $conn->close();
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label">อายุ</label>
-                        <div class="row">
-                            <div class="col">
-                                <input type="number" class="form-control" name="age" value="<?php echo $age; ?>" placeholder="อายุ">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="age" class="form-label">อายุ</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="age" name="age" value="<?php echo htmlspecialchars($age); ?>" placeholder="อายุ">
+                                <span class="input-group-text">ปี</span>
                             </div>
-                            <div class="col">
-                                <span style="line-height: 45px;">ปี</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="weight" class="form-label">น้ำหนัก</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="weight" name="weight" value="<?php echo htmlspecialchars($weight); ?>" placeholder="น้ำหนัก">
+                                <span class="input-group-text">กก.</span>
                             </div>
-                            <div class="col">
-                                <input type="number" class="form-control" name="weight" value="<?php echo $weight; ?>" placeholder="น้ำหนัก" id="weight">
-                            </div>
-                            <div class="col">
-                                <span style="line-height: 45px;">กก.</span>
-                            </div>
-                            <div class="col">
-                                <input type="number" class="form-control" name="height" value="<?php echo $height; ?>" placeholder="ส่วนสูง" id="height">
-                            </div>
-                            <div class="col">
-                                <span style="line-height: 45px;">ซม.</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="height" class="form-label">ส่วนสูง</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="height" name="height" value="<?php echo htmlspecialchars($height); ?>" placeholder="ส่วนสูง">
+                                <span class="input-group-text">ซม.</span>
                             </div>
                         </div>
                     </div>
@@ -252,6 +255,43 @@ $conn->close();
                  submitButton.textContent = 'บันทึกข้อมูล'; // คืนข้อความปุ่มเป็นเหมือนเดิม
             });
         });
+
+        // --- Sidebar Toggle JavaScript ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.bar');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    const icon = sidebarToggle.querySelector('i');
+                    if (sidebar.classList.contains('open')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // Close sidebar if clicking outside on mobile/tablet
+                document.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 992 && sidebar.classList.contains('open')) {
+                        const isClickInsideSidebar = sidebar.contains(event.target);
+                        const isClickOnToggler = sidebarToggle.contains(event.target);
+
+                        if (!isClickInsideSidebar && !isClickOnToggler) {
+                            sidebar.classList.remove('open');
+                            const icon = sidebarToggle.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+        });
+        // --- End Sidebar Toggle JavaScript ---
+
     </script>
 
 </body>

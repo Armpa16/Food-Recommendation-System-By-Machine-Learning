@@ -12,6 +12,7 @@ body {
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
     background-color: white;
     flex-shrink: 0;
+    transition: transform 0.3s ease-in-out; /* เพิ่ม animation ตอนเลื่อน */
 }
 
 .custom-nav {
@@ -183,4 +184,167 @@ body {
 
 .under-calories {
     background-color: #F8B200;
+}
+
+/* === Responsive Sidebar Styles === */
+/* Sidebar Toggle Button */
+#sidebarToggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1050; 
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: none; 
+    font-size: 1.25em; 
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#sidebarToggle:hover {
+    background-color: #f5f5f5;
+}
+
+#sidebarToggle i {
+    display: block; 
+}
+
+.bar.open {
+    transform: translateX(0);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) { /* Adjust this breakpoint as needed */
+    #sidebarToggle {
+        display: block; /* Show the toggle button */
+    }
+
+    .bar {
+        position: fixed; 
+        top: 0;
+        left: 0;
+        height: 100vh !important; ; 
+        width: 280px;
+        transform: translateX(-100%); 
+        z-index: 1040; 
+        box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+        background-color: #f8f9fa; 
+    }
+    .mt-auto a{
+        margin-top: 170px;
+    }
+    .content {
+        margin-left: 0; 
+        padding: 20px; 
+        width: 100%; 
+        align-items: center;
+    }
+    .status{
+        width: 100%;
+        display: flex; /* เพิ่ม display: flex */
+        justify-content: center; /* เพิ่ม justify-content */
+        align-items: center; 
+        flex-wrap: wrap;
+    }
+    .over-cal{
+        width: 40px;
+        height: 40px;
+    }
+    .perfect-cal{
+        width: 40px;
+        height: 40px;
+    }
+    .under-cal{
+        width: 40px;
+        height: 40px;
+    }
+    .calendar-header {
+        width: 100%;
+        padding: 10px;
+    }
+    .box_calen{
+        width: 100%;  
+    }
+    .calendar {
+        width: 100%;
+    }
+    .calendar-row {
+        width: 100%;
+    }
+    .calendar-cell {
+        width: 100%;
+    }
+    .calendar-cell {
+        min-height: 60px; /* Adjusted height for smaller screens */
+    }
+    
+
+    
+
+}
+@media screen and (min-width: 768px) and (max-width: 900px) {
+    #sidebarToggle {
+        display: block; /* Show the toggle button */
+    }
+
+    .bar {
+        position: fixed; 
+        top: 0;
+        left: 0;
+        height: 100vh !important; 
+        width: 280px;
+        transform: translateX(-100%); 
+        z-index: 1040; 
+        box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+        background-color: #f8f9fa; 
+    }
+    .mt-auto a{
+        margin-top: 580px;
+    }
+    .content {
+        margin-left: 100px; 
+        padding: 20px; 
+        width: 100%; 
+        align-items: center;
+    }
+    .status{
+        width: 100%;
+        display: flex; /* เพิ่ม display: flex */
+        justify-content: center; /* เพิ่ม justify-content */
+        align-items: center; 
+    }
+    .over-cal{
+        width: 40px;
+        height: 40px;
+    }
+    .perfect-cal{
+        width: 40px;
+        height: 40px;
+    }
+    .under-cal{
+        width: 40px;
+        height: 40px;
+    }
+    .calendar-header {
+        width: 100%;
+        padding: 10px;
+    }
+    .box_calen{
+        width: 100%;  
+    }
+    .calendar {
+        width: 100%;
+    }
+    .calendar-row {
+        width: 100%;
+    }
+    .calendar-cell {
+        width: 100%;
+    }
+    .calendar-cell {
+        min-height: 80px; /* Adjusted height for smaller screens */
+    }
 }

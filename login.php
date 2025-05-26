@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 // Start session
 session_start();
 
-// Retrieve and sanitize user inputs
+// ดึงข้อมูลและทำความสะอาดอินพุตของผู้ใช้
 $user_input = mysqli_real_escape_string($conn, $_POST['username']);
 $password = $_POST['password'];
 
@@ -24,16 +24,16 @@ $sql = "SELECT * FROM users WHERE username = '$user_input'";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    // Fetch user data
+    // ดึงข้อมูลผู้ใช้
     $user = $result->fetch_assoc();
-    $hashed_password = $user['password']; // Password from database
-    // Verify password
+    $hashed_password = $user['password']; //รหัสผ่านจากฐานข้อมูล
+    // ตรวจสอบรหัสผ่าน
     if (password_verify($password, $hashed_password)) {
-        // Password matches, login successful
+        // รหัสผ่านถูกต้อง --> เข้าระบบสำเร็จ
         $_SESSION['user_id'] = $user['users_id'];
         $_SESSION['username'] = $user['username'];
 
-        // Check if health profile exists
+        // ตรวจสอบว่ามีข้อมูลสุขภาพ
         $user_id = $_SESSION['user_id'];
         $profile_check_sql = "SELECT * FROM profiles WHERE users_id = ?";
         $stmt_profile = $conn->prepare($profile_check_sql);

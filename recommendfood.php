@@ -66,7 +66,7 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RecommendFood</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
@@ -76,6 +76,9 @@ $conn->close();
 </head>
 <body>
     <div class="container">
+        <button id="sidebarToggle" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
         <!-- เเถบบาร์ด้านข้าง -->
         <div class="bar flex-column p-0" style="width: 310px; height: auto;">
             <div class="text-center py-4">
@@ -131,7 +134,7 @@ $conn->close();
             <br>
     
             <div id="recommendedFoods" class="meals-container">
-                <!-- อาหารที่แนะนำจะแสดงที่นี่ -->
+                <!-- อาหารจะแสดงที่นี่ -->
             </div>
 
             <!-- Submit Button -->
@@ -152,6 +155,42 @@ $conn->close();
 
 
 <script>
+    // --- Sidebar Toggle JavaScript ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.bar');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    const icon = sidebarToggle.querySelector('i');
+                    if (sidebar.classList.contains('open')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // Close sidebar if clicking outside on mobile/tablet
+                document.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 992 && sidebar.classList.contains('open')) {
+                        const isClickInsideSidebar = sidebar.contains(event.target);
+                        const isClickOnToggler = sidebarToggle.contains(event.target);
+
+                        if (!isClickInsideSidebar && !isClickOnToggler) {
+                            sidebar.classList.remove('open');
+                            const icon = sidebarToggle.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+        });
+        // --- End Sidebar Toggle JavaScript ---
+    
 // ========================================================================================================================
         // ปุ่มเลื่อนปฏิทิน
         document.addEventListener('DOMContentLoaded', function() {
@@ -201,7 +240,7 @@ $conn->close();
                     
                     loadFoodDataForSelectedDate(currentDate);
                 });
-
+                
                 dates.appendChild(dateElement);
             }
 
@@ -273,7 +312,7 @@ $conn->close();
         showLoadingPopup();
 
         try {
-            const response = await fetch('http://localhost:5000/get_food_details', { // **ต้องสร้าง Endpoint นี้ใน API ของคุณ**
+            const response = await fetch('http://localhost:5000/get_food_details', { 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 // ส่ง food_id ไปใน body
@@ -314,7 +353,7 @@ $conn->close();
         const popup = document.createElement('div');
         popup.className = 'food-details-popup';
 
-        // สร้างเนื้อหา Popup (ปรับแก้ตามข้อมูลที่มีในฐานข้อมูลของคุณ)
+        // สร้างเนื้อหา Popup 
         popup.innerHTML = `
             <div class="popup-header">
                 <h3>ข้อมูลโภชนาการ</h3>
@@ -366,7 +405,7 @@ $conn->close();
     // ฟังก์ชันแสดง/ซ่อน Loading (ตัวอย่างง่ายๆ) 
     function showLoadingPopup() {
         const existingLoading = document.querySelector('.loading-overlay');
-        if (existingLoading) return; // ถ้ามีอยู่แล้วไม่ต้องสร้างใหม่
+        if (existingLoading) return; 
 
         const overlay = document.createElement('div');
         overlay.className = 'popup-overlay loading-overlay';
@@ -665,12 +704,12 @@ $conn->close();
             });
         }
 
-        // --- เพิ่มส่วนนี้เข้าไป ---
+        // ฟังก์ชันสำหรับเพิ่ม Event Listener ปุ่มเพิ่มอาหาร
         const recommendedFoodsContainer = document.getElementById('recommendedFoods');
         if (recommendedFoodsContainer) {
             recommendedFoodsContainer.addEventListener('click', handleFoodCardClick);
         }
-        // --- สิ้นสุดส่วนที่เพิ่ม ---
+
         
         // โหลดข้อมูลเมื่อหน้าเว็บเปิด
         window.onload = function () {
@@ -701,7 +740,7 @@ $conn->close();
                     const meals = data.meals;
                     let mealsHTML = '';
 
-                    // กำหนดลำดับที่ถูกต้อง
+                    // กำหนดลำดับของมื้ออาหาร
                     const orderedMealNames = ['breakfast', 'lunch', 'dinner'];
                     const mealTranslation = {
                         'breakfast': 'อาหารเช้า',
@@ -866,12 +905,14 @@ $conn->close();
             let totalDailyCalories = 0;
             const mealCaloriesElements = document.querySelectorAll('.meal-calories');
             
+            // วนลูปผ่านแต่ละมื้ออาหารเพื่อรวมแคลอรี่
             mealCaloriesElements.forEach(element => {
                 const caloriesText = element.textContent;
                 const calories = parseFloat(caloriesText) || 0;
                 totalDailyCalories += calories;
             });
             
+            // อัพเดทแคลอรี่ทั้งหมดใน UI
             const totalCaloriesElement = document.getElementById('total-calories');
             if (totalCaloriesElement) {
                 totalCaloriesElement.textContent = totalDailyCalories.toFixed(0);
@@ -891,6 +932,7 @@ $conn->close();
             });
         }
 
+        // ฟังก์ชันเเสดงป๊อปอัพสำหรับเลือกอาหาร
         async function showFoodSelectionPopup(mealType) {
             try {
                 // ดึงชื่อผู้ใช้จาก localStorage
@@ -928,8 +970,14 @@ $conn->close();
                         <div class="food-loading">กำลังโหลดรายการอาหาร...</div>
                     </div>
                     <div class="popup-footer">
-                        <button class="submit-food-btn">เพิ่ม <span class="selected-count">(0)</span></button>
-                        <button class="cancel-food-btn">ยกเลิก</button>
+                        <select class="options-food">
+                            <option value="suitable">อาหารที่เหมาะสม</option>
+                            <option value="unsuitable">อาหารที่ไม่เหมาะสม</option>    
+                        </select>
+                        <group class="btn-group">
+                            <button class="submit-food-btn">เพิ่ม <span class="selected-count">(0)</span></button>
+                            <button class="cancel-food-btn">ยกเลิก</button>
+                        </group>
                     </div>
                 `;
 
@@ -942,6 +990,8 @@ $conn->close();
                 const cancelBtn = popup.querySelector('.cancel-food-btn');
                 const searchInput = popup.querySelector('#food-search');
                 const submitBtn = popup.querySelector('.submit-food-btn');
+                const foodOptionsSelect = popup.querySelector('.options-food');
+                const popupContent = popup.querySelector('.popup-content');
                 
                 closeBtn.addEventListener('click', () => document.body.removeChild(overlay));
                 cancelBtn.addEventListener('click', () => document.body.removeChild(overlay));
@@ -957,38 +1007,70 @@ $conn->close();
                     }
                     document.body.removeChild(overlay);
                 });
+                
+                let currentFoodType = 'suitable'; // ค่าเริ่มต้น
+                let allFetchedFoods = []; // เก็บรายการทั้งหมดสำหรับประเภทปัจจุบันเพื่อการกรอง
 
-                // ดึงข้อมูลรายการอาหารจาก API
-                const response = await fetch('http://localhost:5000/get_food_list', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: username })
+                // ฟังก์ชันโหลดรายการอาหารสำหรับผู้ใช้เลือกเอง
+                async function loadAndRenderFoods(type) {
+                    currentFoodType = type;
+                    popupContent.innerHTML = '<div class="food-loading">กำลังโหลดรายการอาหาร...</div>'; // เสดงข้อความโหลดข้อมูล
+                    allFetchedFoods = []; // ล้างรายการก่อนหน้า
+
+                    let apiUrl = 'http://localhost:5000/get_food_list'; // อาหารที่เหมาะสม
+                    if (type === 'unsuitable') {
+                        apiUrl = 'http://localhost:5000/get_unsuitable_food_list'; // อาหารที่ไม่เหมาะสม
+                    }
+                
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username: username }) // ส่งชื่อผู้ใช้ไป
+                        });
+
+                        if (response.ok) {
+                            const foodData = await response.json();
+                            console.log(`Data for ${type} food:`, foodData);
+                            if (foodData && Array.isArray(foodData.meals)) {
+                                allFetchedFoods = foodData.meals;
+                            } else {
+                                console.error(`Invalid data structure for ${type} food:`, foodData);
+                                allFetchedFoods = [];
+                            }
+                            renderMealSet({ meals: allFetchedFoods }, popupContent, mealType, selectedFoods, popup);
+                        } else {
+                            popupContent.innerHTML = `<div class="error-message">ไม่สามารถโหลดรายการอาหาร (${type}) ได้</div>`;
+                            allFetchedFoods = [];
+                        }
+                    } catch (error) {
+                        console.error(`Error fetching ${type} foods:`, error);
+                        popupContent.innerHTML = `<div class="error-message">เกิดข้อผิดพลาดในการโหลดรายการอาหาร (${type})</div>`;
+                        allFetchedFoods = [];
+                    }
+                }
+
+                // โหลดประเภทอาหารเริ่มต้น
+                loadAndRenderFoods(currentFoodType);
+
+                // ตัวรับค่าของการคลิกเลือกอาหาร เหมาะ/ไม่เหมาะ
+                foodOptionsSelect.addEventListener('change', (event) => {
+                    selectedFoods.length = 0; // ล้างรายการอาหารที่เลือก
+                    updateSelectedCount(0, popup); // อัพเดทจำนวนอาหารที่เลือก
+                    searchInput.value = ''; // เคลียร์ช่องค้นหา
+                    loadAndRenderFoods(event.target.value);
                 });
 
-                if (response.ok) {
-                    const foodData = await response.json();
-                    const popupContent = popup.querySelector('.popup-content');
-                    console.log(foodData);  // เพิ่มการ log เพื่อดูว่า API ส่งอะไรกลับมา
-                    if (!foodData || !foodData.meals || !Array.isArray(foodData.meals)) {
-                        popupContent.innerHTML = '<div class="no-foods">ไม่พบรายการอาหารที่เหมาะสม</div>';
-                        return;
-                    }
-                    renderMealSet(foodData, popupContent, mealType, selectedFoods, popup);
-
-                    // เพิ่ม event listener สำหรับการค้นหา
-                    searchInput.addEventListener('input', () => {
-                        const searchTerm = searchInput.value.toLowerCase();
-                        const filteredData = {
-                            meals: foodData.meals.filter(meal => 
-                                meal.food_name.toLowerCase().includes(searchTerm)
-                            )
-                        };
-                        renderMealSet(filteredData, popupContent, mealType, selectedFoods, popup);
-                    });
-                } else {
-                    const popupContent = popup.querySelector('.popup-content');
-                    popupContent.innerHTML = '<div class="error-message">ไม่สามารถโหลดรายการอาหารได้</div>';
-                }
+                // ตัวรับอินพุตค้นหา
+                searchInput.addEventListener('input', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const filteredData = {
+                        meals: allFetchedFoods.filter(meal =>
+                            meal.food_name.toLowerCase().includes(searchTerm)
+                        )
+                    };
+                    renderMealSet(filteredData, popupContent, mealType, selectedFoods, popup);
+                });
 
             } catch (error) {
                 console.error('Error showing food popup:', error);
@@ -1278,7 +1360,8 @@ $conn->close();
             });
         });
 
-        // Add this line to define currentWeekStart outside of the renderWeek function
+        // กำหนด currentWeekStart นอกฟังก์ชัน renderWeek เพื่อให้สามารถเข้าถึงได้ทั่วทั้งสคริปต์
+        // กำหนด currentWeekStart เป็นวันอาทิตย์ของสัปดาห์ปัจจุบัน
         let currentWeekStart = new Date();
         currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay()); // Start from Sunday
 
@@ -1302,8 +1385,10 @@ $conn->close();
 
             checkSavedMeals(username, date)
                 .then(hasSavedMeals => {
+                    // ส่งข้อมูลไปยัง api เพื่อบันทึกข้อมูลอาหาร
                     let apiUrl = 'http://127.0.0.1:5000/save_meals';
                     if (hasSavedMeals) {
+                        // ถ้ามีบันทึกแล้ว ไป api อัพเดท
                         apiUrl = 'http://127.0.0.1:5000/update_meals';
                     }
                     fetch(apiUrl, {
@@ -1321,6 +1406,7 @@ $conn->close();
                     .then(data => {
                         if (data.success) {
                             alert("บันทึกสำเร็จ!");
+                            // window.location.reload();
                         } else {
                             alert("เกิดข้อผิดพลาด: " + data.error);
                         }
@@ -1336,6 +1422,7 @@ $conn->close();
                 });
         }
         
+        // ฟังก์ชันเก็บข้อมูลอาหาร ก่อนบันทึก
         function collectMealData() {
             let meals = {};
             document.querySelectorAll(".meal-section").forEach(mealElement => {

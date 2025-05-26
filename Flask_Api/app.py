@@ -204,15 +204,16 @@ def get_meal_set(food_type_code, target_calories):
         print(f"❌ MySQL Error in get_meal_set: {err}")
         return None
 
-
+# API เเนะนำอาหาร
 @app.route('/get_recommendations', methods=['POST'])
 def get_recommendations():
     try:
         data = request.get_json()
         username = data.get('username')
-
+    
         print(f"🔍 รับคำขอสำหรับผู้ใช้: {username}")  
-
+        
+        # ตรวจสอบว่ามีชื่อผู้ใช้หรือไม่
         user_data = get_user_data(username)
         if user_data is None:
             print("❌ ไม่พบข้อมูลผู้ใช้")
@@ -224,7 +225,6 @@ def get_recommendations():
         dinner_calories = daily_calorie * 0.3
 
         food_type_code, food_type_name = predict_food_type(user_data)
-
         breakfast = get_meal_set(food_type_code, breakfast_calories)
         lunch = get_meal_set(food_type_code, lunch_calories)
         dinner = get_meal_set(food_type_code, dinner_calories)
@@ -250,7 +250,9 @@ def get_recommendations():
     except Exception as e:
         print(f"❌ Error in get_recommendations: {e}")
         return jsonify({"error": str(e)}), 500
+    
 
+# API ดึงรายการอาหารที่แนะนำ/เหมาะสม
 @app.route('/get_food_list', methods=['POST'])
 def get_food_list():
     try:
@@ -317,7 +319,73 @@ def get_food_list():
         print(f"❌ Error: {e}")
         return jsonify({"error": str(e)}), 500
     
+    
+# API ดึงรายการอาหารที่ไม่เหมาะสม
+@app.route('/get_unsuitable_food_list', methods=['POST'])
+def get_unsuitable_food_list():
+    try:
+        data = request.get_json()
+        username = data.get('username')
+        if not username:
+            print(f"❌ ไม่พบชื่อผู้ใช้ในคำขอสำหรับอาหารที่ไม่เหมาะสม: {data}")
+            return jsonify({"error": "Username ไม่ได้ส่งมา"}), 400
+        print(f"🔍 รับคำขอสำหรับอาหารที่ไม่เหมาะสมสำหรับผู้ใช้: {username}")
 
+        user_data = get_user_data(username)
+        if user_data is None:
+            print(f"❌ ไม่พบข้อมูลผู้ใช้ (อาหารที่ไม่เหมาะสม): {username}")
+            return jsonify({"error": "ไม่พบข้อมูลผู้ใช้"}), 404
+
+        # ทำนายประเภทอาหาร
+        predicted_food_type_code, predicted_food_type_name = predict_food_type(user_data)
+        print(f"✅ ประเภทอาหารที่ทำนาย (สำหรับอาหารที่ไม่เหมาะสม): {predicted_food_type_name} (code: {predicted_food_type_code})")
+
+        # ดึงประเภทอาหารที่เกี่ยวข้อง (ถือว่าเป็น "เหมาะสม")
+        suitable_type_codes = get_related_food_types(predicted_food_type_code)
+        print(f"✅ ประเภทอาหารที่ถือว่าเหมาะสม (codes): {suitable_type_codes}")
+
+        # หาประเภทอาหารที่ไม่เหมาะสม
+        unsuitable_food_type_names = []
+        for code, name in food_type_mapping.items():
+            if code not in suitable_type_codes:
+                unsuitable_food_type_names.append(name)
+        
+        print(f"✅ ประเภทอาหารที่ไม่เหมาะสม (names): {unsuitable_food_type_names}")
+
+        meals = []
+        if unsuitable_food_type_names:
+            conn = get_db_connection()
+            cursor = conn.cursor(dictionary=True)
+
+            # สร้าง query string สำหรับ IN clause
+            placeholders = ', '.join(['%s'] * len(unsuitable_food_type_names))
+            query = f"""
+                SELECT * FROM food_menu
+                WHERE food_type IN ({placeholders})
+                ORDER BY food_name
+            """
+            cursor.execute(query, tuple(unsuitable_food_type_names))
+            meals = cursor.fetchall()
+
+            cursor.close()
+            conn.close()
+
+        if not meals:
+            print(f"❌ ไม่พบรายการอาหารที่ไม่เหมาะสมสำหรับประเภท: {unsuitable_food_type_names}")
+            # อาจจะคืนค่าว่างถ้าไม่พบ หรือคืน error ตามความเหมาะสม
+            # return jsonify({"error": "ไม่พบรายการอาหารที่ไม่เหมาะสม"}), 404
+
+        response_data = {
+            "predicted_suitable_food_type_name": predicted_food_type_name,
+            "meals": meals
+        }
+        print("✅ ข้อมูลรายการอาหารที่ไม่เหมาะสมที่ดึงมา:", len(meals), "รายการ")
+        return jsonify(response_data), 200
+    except Exception as e:
+        print(f"❌ Error in get_unsuitable_food_list: {e}")
+        return jsonify({"error": str(e)}), 500  
+     
+# API บันทึกอาหาร
 @app.route('/save_meals', methods=['POST'])
 def save_meals():
     try:
@@ -403,7 +471,7 @@ def save_meals():
 
 
 
-# API สำหรับตรวจสอบว่ามีข้อมูลอาหารที่บันทึกไว้สำหรับวันที่กำหนดหรือไม่
+# API สำหรับตรวจสอบว่ามีข้อมูลอาหารที่บันทึกไว้ในวันนั้นๆหรือไม่
 @app.route('/check_saved_meals', methods=['POST'])
 def check_saved_meals():
     try:
@@ -438,8 +506,9 @@ def check_saved_meals():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
 
-# API สำหรับดึงข้อมูลอาหารที่บันทึกไว้สำหรับวันที่กำหนด
+# API สำหรับดึงข้อมูลอาหารที่บันทึกไว้สำหรับวันที่เลือก
 @app.route('/get_saved_meals', methods=['POST'])
 def get_saved_meals():
     try:
@@ -494,6 +563,7 @@ def get_saved_meals():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# API อัพเดทข้อมูลอาหารที่บันทึกไว้
 @app.route('/update_meals', methods=['POST'])
 def update_meals():
     try:
@@ -579,6 +649,7 @@ def update_meals():
 
     except Exception as e:
         return jsonify({'error': str(e), 'message': 'เกิดข้อผิดพลาดในการอัพเดทข้อมูล'}), 500
+        
 
 # API สำหรับดึงข้อมูลสถานะมื้ออาหารสำหรับเดือนที่กำหนด
 @app.route('/get_meal_status_for_month', methods=['POST'])
@@ -651,7 +722,8 @@ def get_meal_status_for_month():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
+    
+# API ดึงโภชนาการเเละข้อมูลอาหาร
 @app.route('/get_food_details', methods=['POST'])
 def get_food_details():
     data = request.get_json()
@@ -662,14 +734,14 @@ def get_food_details():
 
     conn = get_db_connection()
     if not conn:
-         # เพิ่มการ print log เพื่อช่วยตรวจสอบปัญหาการเชื่อมต่อ
+         # ตรวจสอบปัญหาการเชื่อมต่อ
          print("Error: Database connection failed in get_food_details")
          return jsonify({"success": False, "error": "Database connection failed"}), 500
 
     cursor = conn.cursor(dictionary=True) # ใช้ dictionary=True เพื่อให้ผลลัพธ์เป็น dict
 
     try:
-        # Query เพื่อดึงข้อมูลอาหารตาม food_id
+        # ดึงข้อมูลอาหาร
         query = """
             SELECT
                 food_id,
@@ -708,11 +780,11 @@ def get_food_details():
             return jsonify({"success": False, "error": "Food not found"}), 404
 
     except mysql.connector.Error as err:
-        # Print error ที่ละเอียดขึ้นเพื่อช่วย debug
+        # debug
         print(f"Database query error in get_food_details: {err}")
-        print(f"Query attempted: {query % (food_id,)}") # แสดง query ที่พยายามรัน (ระวัง SQL Injection ถ้าแสดงใน production)
+        print(f"Query attempted: {query % (food_id,)}") # แสดง query ที่พยายามรัน 
         return jsonify({"success": False, "error": f"Database query error: {err}"}), 500
-    except Exception as e: # ดักจับข้อผิดพลาดอื่นๆ ที่อาจเกิดขึ้น
+    except Exception as e: # ดักจับ eror อื่นๆ ที่อาจเกิดขึ้น
         print(f"Unexpected error in get_food_details: {e}")
         return jsonify({"success": False, "error": f"An unexpected server error occurred: {e}"}), 500
     finally:
@@ -720,6 +792,7 @@ def get_food_details():
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
+
 
 if __name__ == "__main__":
     app.run(debug=True)

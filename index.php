@@ -64,7 +64,7 @@ $conn->close();
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
@@ -74,6 +74,9 @@ $conn->close();
 </head>
 <body>
     <div class="container">
+        <button id="sidebarToggle" aria-label="Toggle sidebar">
+            <i class="fas fa-bars"></i>
+        </button>
         <!-- เเถบบาร์ด้านข้าง -->
         <div class="bar flex-column p-0" style="width: 310px; height: 1150px;">
             <div class="text-center py-4">
@@ -156,8 +159,10 @@ $conn->close();
                             <div class="cercle">
                                 <i class="fa-solid fa-weight-scale"></i>
                             </div>
-                            <?php echo htmlspecialchars($bmi); ?><br>
-                            <?php echo htmlspecialchars($status_bmi); ?>
+                            <div class="bmi-text-container">
+                                <?php echo htmlspecialchars($bmi); ?><br>
+                                <?php echo htmlspecialchars($status_bmi); ?>
+                            </div>
                         </div>
                     </div>
                     <!-- bmi -->
@@ -239,6 +244,7 @@ $conn->close();
             const formattedEndDate = endDate.toISOString().split('T')[0];
 
             try {
+                // ส่งคำขอไปยังเซิร์ฟเวอร์เพื่อดึงข้อมูลแคลอรี่
                 const response = await fetch('http://localhost:5000/get_meal_status_for_month', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -281,6 +287,7 @@ $conn->close();
             updateChart();
         }
 
+        // ฟังก์ชันสร้างกราฟ
         const ctx = document.getElementById('calorieChart').getContext('2d');
         let calorieChart = new Chart(ctx, {
             type: 'bar',
@@ -302,6 +309,42 @@ $conn->close();
                 }
             }
         });
+
+        // --- Sidebar Toggle JavaScript ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.bar');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    const icon = sidebarToggle.querySelector('i');
+                    if (sidebar.classList.contains('open')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+
+                // Close sidebar if clicking outside on mobile/tablet
+                document.addEventListener('click', function(event) {
+                    if (window.innerWidth <= 992 && sidebar.classList.contains('open')) {
+                        const isClickInsideSidebar = sidebar.contains(event.target);
+                        const isClickOnToggler = sidebarToggle.contains(event.target);
+
+                        if (!isClickInsideSidebar && !isClickOnToggler) {
+                            sidebar.classList.remove('open');
+                            const icon = sidebarToggle.querySelector('i');
+                            icon.classList.remove('fa-times');
+                            icon.classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+        });
+        // --- End Sidebar Toggle JavaScript ---
 
         updateChart();
     </script>

@@ -9,6 +9,7 @@ body {
     box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
     background-color: white;
     flex-shrink: 0;
+    transition: transform 0.3s ease-in-out; /* เพิ่ม animation ตอนเลื่อน */
 }
 .custom-nav {
     width: 100%;          /* ปรับให้เต็มความกว้าง */
@@ -260,3 +261,343 @@ h1{
 .calendar-controls button:hover {
     background: #2563eb;
 }
+/* === Responsive Sidebar Styles === */
+/* Sidebar Toggle Button */
+#sidebarToggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1050; 
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: none; 
+    font-size: 1.25em; 
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#sidebarToggle:hover {
+    background-color: #f5f5f5;
+}
+
+#sidebarToggle i {
+    display: block; 
+}
+
+.bar.open {
+    transform: translateX(0);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) { /* Adjust this breakpoint as needed */
+    #sidebarToggle {
+        display: block; /* Show the toggle button */
+    }
+
+    .bar {
+        position: fixed; 
+        top: 0;
+        left: 0;
+        height: 100vh !important; ; 
+        width: 280px;
+        transform: translateX(-100%); 
+        z-index: 1040; 
+        box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+        background-color: #f8f9fa; 
+    }
+    .mt-auto a{
+        margin-top: 170px;
+    }
+    .content {
+        margin-left: 0; 
+        padding: 20px; 
+        width: 100%; 
+        align-items: center;
+    }
+    .showinfo {
+        flex-direction: column; 
+        align-items: center; 
+        width: 100%; 
+        height: auto;
+        flex-wrap: wrap; 
+    }
+    .info_user {
+        width: 100%; 
+        height: auto; 
+        margin-bottom: 20px;
+         
+    }
+    .calorie_show {
+        width: 100%; 
+        height: 220px;  
+        padding: 20px; 
+    }
+    body > div > div.content > div.showinfo > div.info_user.bg-body-tertiary > div.calorie_show > div.cercle {
+        width: 90px;
+        height: 90px;
+        font-size: 30px; 
+    }
+    .cal_per_day {
+        font-size: 16px;
+    }
+    .progress {
+        width: 150px; 
+        height: 20px; 
+        margin-top: 10px; 
+    }
+
+    .statusinfo_show {
+        width: 100%; 
+        height: auto; 
+        align-items: center; 
+    }
+    .statusinfo_show span {
+        font-size: 14px;
+    }
+    .box-small {
+        width: 100%; 
+        height: auto; 
+        flex-direction: row; 
+        justify-content: space-around; 
+    }
+    .bmi {
+        width: 80%;
+        height: 160px; 
+        font-size: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        word-wrap: break-word;
+    }
+    .bmi_show {
+        width: 100%; 
+        height: auto; 
+        margin-top: 0;
+        margin-left: 20px;
+    }
+    .bmi_show .cercle {
+        width: 60px;
+        height: 60px;
+        font-size: 24px; 
+    }
+    .bmi-text-container {
+        margin-left: 10px; 
+        text-align: left; 
+        word-wrap: break-word; 
+        overflow-wrap: break-word; 
+    }
+    .dis{
+        width: 80%;
+        height: auto;
+        margin-top: 0;
+        margin-left: 20px;
+    }
+    .diseases_show {
+        width: 100%; 
+        height: auto; 
+        margin-top: 0;
+        margin-left: 20px;
+    }
+    .diseases_show .cercle {
+        width: 56px;
+        height: 56px;
+        font-size: 24px; 
+        margin-left: -15px;
+        margin-top: -5px;
+    }
+    .disease-list { 
+        text-align: left;           
+        word-wrap: break-word;      
+        overflow-wrap: break-word;  
+        max-width: 102px;           
+        justify-content: flex-start; 
+    }
+    .disease-list span {
+        font-size: 14px; 
+    }
+    .cal_day{
+        width: 100%; 
+        height: auto; 
+        margin-top: 0;
+    }
+    .chart-container {
+        width: 100%; 
+        height: auto;
+        max-width: 100%; 
+        margin: auto; 
+        padding: 10px; 
+        margin-top: 20px; 
+    }
+    #calorieChart {
+        width: 100%; 
+        height: 300px; 
+    }
+    #week-label {
+        font-size: 16px; 
+    }
+    .calendar-controls button {
+        width: 25%; 
+        margin: 5px 0; /* คง margin เดิม */
+        font-size: 12px; /* ลดขนาดตัวอักษรลงเล็กน้อย */
+        padding: 6px 8px; /* ลด padding เพื่อให้ปุ่มเล็กลง */
+    }
+
+}
+@media screen and (min-width: 768px) and (max-width: 900px) {
+    #sidebarToggle {
+        display: block; /* Show the toggle button */
+    }
+
+    .bar {
+        position: fixed; 
+        top: 0;
+        left: 0;
+        height: 100vh !important; 
+        width: 280px;
+        transform: translateX(-100%); 
+        z-index: 1040; 
+        box-shadow: 3px 0 6px rgba(0,0,0,0.1);
+        background-color: #f8f9fa; 
+    }
+    .mt-auto a{
+        margin-top: 580px;
+    }
+    .content {
+        margin-left: 100px; 
+        padding: 20px; 
+        width: 100%; 
+        align-items: center;
+    }
+    .showinfo {
+        flex-direction: column; 
+        align-items: center; 
+        width: 100%; 
+        height: auto;
+        flex-wrap: wrap; 
+    }
+    .info_user {
+        width: 100%; 
+        height: auto; 
+        margin-bottom: 20px;
+         
+    }
+    .calorie_show {
+        width: 100%; 
+        height: 250px;  
+        padding: 20px; 
+    }
+    body > div > div.content > div.showinfo > div.info_user.bg-body-tertiary > div.calorie_show > div.cercle {
+        width: 90px;
+        height: 90px;
+        font-size: 30px; 
+    }
+    .cal_per_day {
+        font-size: 16px;
+    }
+    .progress {
+        width: 350px; 
+        height: 20px; 
+        margin-top: 10px; 
+    }
+
+    .statusinfo_show {
+        width: 100%; 
+        height: auto; 
+        align-items: center; 
+    }
+    .statusinfo_show span {
+        font-size: 14px;
+    }
+    .box-small {
+        width: 100%; 
+        height: auto; 
+        flex-direction: row; 
+        justify-content: space-around; 
+    }
+    .bmi {
+        width: 80%;
+        height: 160px; 
+        font-size: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+        word-wrap: break-word;
+    }
+    .bmi_show {
+        width: 100%; 
+        height: auto; 
+        margin-top: 0;
+        margin-left: 20px;
+    }
+    .bmi_show .cercle {
+        width: 60px;
+        height: 60px;
+        font-size: 24px; 
+    }
+    .bmi-text-container {
+        text-align: left; 
+        word-wrap: break-word; 
+        overflow-wrap: break-word; 
+    }
+    .dis{
+        width: 80%;
+        height: auto;
+        margin-top: 0;
+        margin-left: 20px;
+    }
+    .diseases_show {
+        width: 100%; 
+        height: auto; 
+        margin-top: 0;
+        margin-left: 20px;
+    }
+    .diseases_show .cercle {
+        width: 56px;
+        height: 56px;
+        font-size: 24px; 
+        margin-right: 90px;
+        margin-top: -5px;
+    }
+    .disease-list { 
+        text-align: left;           
+        word-wrap: break-word;      
+        overflow-wrap: break-word;  
+        max-width: 150px;           
+        justify-content: flex-start; 
+        margin-left: -60px;
+    }
+    .disease-list span {
+        font-size: 14px; 
+    }
+    .cal_day{
+        width: 100%; 
+        height: auto; 
+        margin-top: 0;
+    }
+    .chart-container {
+        width: 100%; 
+        height: auto;
+        max-width: 100%; 
+        margin: auto; 
+        padding: 10px; 
+        margin-top: 20px; 
+    }
+    #calorieChart {
+        width: 100%; 
+        height: 300px; 
+    }
+    #week-label {
+        font-size: 16px; 
+    }
+    .calendar-controls button {
+        width: 25%; 
+        margin: 5px 0; /* คง margin เดิม */
+        font-size: 12px; /* ลดขนาดตัวอักษรลงเล็กน้อย */
+        padding: 6px 8px; /* ลด padding เพื่อให้ปุ่มเล็กลง */
+    }
+}
+
+
+
+/* === End Responsive Sidebar Styles === */
