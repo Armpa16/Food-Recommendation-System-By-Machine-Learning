@@ -91,7 +91,7 @@ a:hover{
     line-height: 30px;
     letter-spacing: 1.5px;
 }
-@media (max-width: 900px) {
+@media screen and (min-width: 768px) and (max-width: 900px) {
     body {
         display: flex;
         flex-direction: column;
@@ -102,7 +102,7 @@ a:hover{
     }
 
     .box_left, .box_right {
-        width: 90% !important; /* Use !important to override existing styles if necessary */
+        width: 100% !important; /* Use !important to override existing styles if necessary */
         margin: 10px 0;
         height: auto; /* Adjust height automatically */
         padding: 20px;
@@ -154,7 +154,74 @@ a:hover{
 }
 
 /* Extra small devices (phones, 600px and down) */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; /* Align to top */
+        min-height: 100vh;
+        padding-top: 20px; /* Add some padding at the top */
+    }
+
+    .box_left, .box_right {
+        width: 90% !important; /* Use !important to override existing styles if necessary */
+        margin: 10px 0;
+        height: auto; /* Adjust height automatically */
+        padding: 20px;
+    }
+
+    .box_left {
+        order: 2; /* Display login form below the welcome message on small screens */
+    }
+    
+
+    .box_right {
+        order: 1;
+        text-align: center; /* Center text in the welcome box */
+        height: 300px;
+    }
+
+    .name {
+        margin-top: -20px; /* Add some margin at the top */
+        width: 100%;
+    }
+    .pass {
+        width: 100%;
+    }
+
+    .box_right .text_box h1 {
+        font-size: 2.5em; /* Adjust font size for smaller screens */
+    }
+
+    .box_right .text_box p {
+        font-size: 1.5em; /* Adjust font size for smaller screens */
+    }
+
+    .box_left form h1 {
+        font-size: 1.8em; /* Adjust font size */
+    }
+
+    .box_left input[type="text"],
+    .box_left input[type="password"] {
+        width: 100%; /* Adjust width */
+        max-width: auto; /* Set a maximum width */
+        box-sizing: border-box; /* Ensure padding is included in width */
+    }
+
+    .box_left button,
+    .box_left a {
+        width: 100%;
+        text-align: center;
+    }
+
+    .regis {
+        font-size: 0.9em;
+    }
+    .regis hr {
+        width: 110px; /* Adjust width */
+        
+    }
     .box_left, .box_right {
         width: 95% !important;
         padding: 15px;

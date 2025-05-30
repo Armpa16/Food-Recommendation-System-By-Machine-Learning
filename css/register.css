@@ -93,7 +93,7 @@ a:hover{
     border: 1px solid #C2C2C2;
 }
 
-@media (max-width: 900px) {
+@media screen and (min-width: 768px) and (max-width: 900px) {
     body {
         display: flex;
         flex-direction: column;
@@ -104,7 +104,7 @@ a:hover{
     }
 
     .box_left, .box_right {
-        width: 90% !important; /* Use !important to override existing styles if necessary */
+        width: 100% !important; /* Use !important to override existing styles if necessary */
         margin: 10px 0;
         height: auto; /* Adjust height automatically */
         padding: 20px;
@@ -157,10 +157,44 @@ a:hover{
 }
 
 /* Extra small devices (phones, 600px and down) */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; /* Align to top */
+        min-height: 100vh;
+        padding-top: 20px; /* Add some padding at the top */
+    }
     .box_left, .box_right {
         width: 95% !important;
         padding: 15px;
+    }
+    .box_right {
+        order: 2; /* Display login form below the welcome message on small screens */
+    }
+
+    .box_left {
+        order: 1;
+        text-align: center; /* Center text in the welcome box */
+        height: 300px;
+    }
+    body > div.box_right > form {
+        margin-top: -200px; /* Adjust margin to align form properly */
+    }
+
+    .name {
+        margin-top: -20px; /* Add some margin at the top */
+        width: 100%;
+    }
+    .pass {
+        width: 100%;
+    }
+    .mail {
+        width: 100%;
+    }
+    .con_pass {
+        width: 100%;
     }
 
     .box_left .text_box h1 {
@@ -177,6 +211,25 @@ a:hover{
 
     .box_right label {
         font-size: 0.9em;
+    }
+    .box_right input[type="text"],
+    .box_right input[type="password"],
+    .box_right input[type="email"] {
+        width: 100%; /* Adjust width */
+        max-width: auto; /* Set a maximum width */
+        box-sizing: border-box; /* Ensure padding is included in width */
+    }
+
+    .box_right button,
+    .box_right a {
+        width: 100%;
+        text-align: center;
+    }
+    .regis {
+        font-size: 0.9em;
+    }
+    .regis hr {
+        width: 70px; /* Adjust width */
     }
 }
 
