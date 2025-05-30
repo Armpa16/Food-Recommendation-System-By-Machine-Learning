@@ -84,11 +84,24 @@ p{
     color: #949494;
 }
 /* ปรับขนาดหน้าจอที่ต้องการให้ Responsive */
-@media (max-width: 768px) {
+@media screen and (min-width: 768px) and (max-width: 900px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0; /* กำจัด margin default */
+        padding: 0; /* กำจัด padding default */
+        min-height: 100vh; /* กำหนดความสูงขั้นต่ำเท่ากับ viewport */
+        background-image: url(img/pic_health.png);
+        background-size: cover; /* ให้รูปภาพครอบคลุมพื้นที่ทั้งหมด */
+        background-position: center center; /* จัดตำแหน่งรูปภาพให้อยู่กลาง */
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* ให้พื้นหลังไม่เลื่อนตาม scroll */
+    }
     .health_data {
         padding: 20px; /* ลด padding โดยรวม */
         width: 80%; /* ใช้ความกว้างเกือบเต็มหน้าจอ */
-        height: 900px; /* ปรับความสูงให้เหมาะสม */
+        height: auto; /* ปรับความสูงให้เหมาะสมกับเนื้อหา */
         margin: 20px auto; /* จัดให้อยู่ตรงกลาง */
     }
 
@@ -156,10 +169,103 @@ p{
     }
 
     button[type="submit"] {
-        width: 100%; /* ทำให้ปุ่มบันทึกเต็มความกว้าง */
-        padding: 12px; /* เพิ่ม padding ให้ปุ่ม */
-        font-size: 16px; /* ปรับขนาดตัวอักษรปุ่ม */
-        margin-left: 0;
+        width: 30%;
+        padding: 12px;
+        font-size: 16px;
+        display: block;
+        margin: 0 auto; /* จัดกึ่งกลางด้วย margin auto */
+    }
+}
+@media (max-width: 768px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0; /* กำจัด margin default */
+        padding: 0; /* กำจัด padding default */
+        min-height: 100vh; /* กำหนดความสูงขั้นต่ำเท่ากับ viewport */
+        background-image: url(img/pic_health.png);
+        background-size: cover; /* ให้รูปภาพครอบคลุมพื้นที่ทั้งหมด */
+        background-position: center center; /* จัดตำแหน่งรูปภาพให้อยู่กลาง */
+        background-repeat: no-repeat;
+        background-attachment: fixed; /* ให้พื้นหลังไม่เลื่อนตาม scroll */
+    }
+    .health_data {
+        padding: 20px; /* ลด padding โดยรวม */
+        width: 80%; /* ใช้ความกว้างเกือบเต็มหน้าจอ */
+        height: auto; /* ปรับความสูงให้เหมาะสมกับเนื้อหา */
+        margin: 20px auto; /* จัดให้อยู่ตรงกลาง */
+    }
+
+    .health_data h1 {
+        font-size: 24px; /* ปรับขนาดหัวข้อ */
+        margin-top: -10px; /* เพิ่มระยะห่างด้านล่าง */
+    }
+
+    .health_data p {
+        font-size: 14px; /* ปรับขนาดข้อความ */
+        margin-top: -10px; /* เพิ่มระยะห่างด้านล่าง */
+    }
+
+    .health_data a {
+        margin-bottom: 20px; /* เพิ่มระยะห่างด้านล่างของปุ่มย้อนกลับ */
+        display: inline-block; /* ทำให้สามารถกำหนด margin ได้ */
+    }
+
+    .field {
+        flex-direction: column; /* ทำให้ input age, weight, height เรียงลงมา */
+        align-items: flex-start; /* จัดชิดซ้าย */
+        position: relative;
+    }
+
+    .health_data form{
+        padding-left: 0; /* ลบ padding ด้านซ้าย */
+        margin-top: -20px; /* เพิ่มระยะห่างด้านบน */
+    }
+    .input_age,
+    .input_weight,
+    .input_height {
+        width: 100%; /* ให้ input แต่ละตัวมีความกว้างเต็มพื้นที่ */
+        margin-right: 0; /* ลบ margin ด้านขวา */
+        margin-bottom: 15px; /* เพิ่มระยะห่างด้านล่างระหว่าง input */
+    }
+
+    .input_age input,
+    .input_weight input,
+    .input_height input {
+        width: calc(100% - 100px);  /* ปรับความกว้างของ input ให้พอดีกับข้อความ "ปี", "กก.", "ซม." */
+        display: inline-block; /* จัดให้อยู่ในบรรทัดเดียวกับข้อความหน่วย */
+        vertical-align: middle; /* จัดแนวตั้งให้อยู่ตรงกลาง */
+    }
+
+    .input_age span,
+    .input_weight span,
+    .input_height span {
+         display: inline-block; /* จัดให้อยู่ในบรรทัดเดียวกับ input */
+         vertical-align: middle; /* จัดแนวตั้งให้อยู่ตรงกลาง */
+         margin-left: 5px; /* เพิ่มระยะห่างจาก input */
+    }
+
+
+    .input_diseases input[type="checkbox"],
+    .input_activity_level input[type="radio"] {
+        margin-top: -10px; /* เพิ่มระยะห่างด้านล่างของ checkbox/radio */
+        display: inline-block; /* ทำให้ยังคงเรียงในบรรทัดเดียวกันได้ถ้ามีที่พอ */
+        vertical-align: middle;
+    }
+
+    .input_diseases span,
+    .input_activity_level span {
+        display: block; /* ทำให้หัวข้อเรียงลงมา */
+        margin-top: -10px; /* เพิ่มระยะห่างด้านล่างของหัวข้อ */
+    }
+
+    button[type="submit"] {
+        width: 50%;
+        padding: 12px;
+        font-size: 16px;
+        display: block;
+        margin: 0 auto; /* จัดกึ่งกลางด้วย margin auto */
     }
 }
 
