@@ -1025,8 +1025,8 @@ border-color: #007bff transparent transparent transparent;
         margin-left: 250px;
     } */
     .options-food{
-        width: 120px;
-        height: 40px;
+        width: 100%;
+        height: auto;
         padding: 5px;
         font-size: 14px;
         margin-right: 20px;
