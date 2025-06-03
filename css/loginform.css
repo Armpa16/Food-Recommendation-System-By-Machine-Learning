@@ -59,6 +59,10 @@ a:hover{
     background-color: #4A6BFF;
     color: white;
 }
+.pass #togglePassword:hover {
+    cursor: pointer;
+    color: #575757 !important;
+}
 .regis{
     display: flex;
     color: #b7b7b7;
@@ -98,7 +102,7 @@ a:hover{
         align-items: center;
         justify-content: flex-start; /* Align to top */
         min-height: 100vh;
-        padding-top: 20px; /* Add some padding at the top */
+        padding-top: 0; /* Add some padding at the top */
     }
 
     .box_left, .box_right {
@@ -161,7 +165,7 @@ a:hover{
         align-items: center;
         justify-content: flex-start; /* Align to top */
         min-height: 100vh;
-        padding-top: 20px; /* Add some padding at the top */
+        padding-top: 0; /* Add some padding at the top */
     }
 
     .box_left, .box_right {
@@ -243,4 +247,3 @@ a:hover{
         font-size: 0.9em;
     }
 }
-

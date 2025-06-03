@@ -32,12 +32,18 @@
             </div><br>
             <div class="pass">
                 <label>รหัสผ่าน</label><br><br>
-                <input type="password" name="password"  placeholder="กรุณากรอกรหัสผ่านของคุณ" required>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <input type="password" name="password" id="password" placeholder="กรุณากรอกรหัสผ่านของคุณ" required>
+                    <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 15px; cursor: pointer; color:#C2C2C2;"></i>
+                </div>
                 <!-- <i class="fa-solid fa-lock"></i> -->
             </div><br>
             <div class="con_pass">
                 <label>ยืนยันรหัสผ่าน</label><br><br>
-                <input type="password" name="c_password"  placeholder="กรุณากรอกรหัสผ่านของคุณอีกครั้ง" required>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <input type="password" name="c_password" id="c_password" placeholder="กรุณากรอกรหัสผ่านของคุณอีกครั้ง" required>
+                    <i class="fas fa-eye" id="toggleCPassword" style="position: absolute; right: 15px; cursor: pointer; color:#C2C2C2;"></i>
+                </div>
                 <!-- <i class="fa-solid fa-lock"></i> -->
             </div><br><br>
             <button type="submit">สร้างบัญชี</button><br><br>

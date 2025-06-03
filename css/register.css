@@ -100,7 +100,7 @@ a:hover{
         align-items: center;
         justify-content: flex-start; /* Align to top */
         min-height: 100vh;
-        padding-top: 20px; /* Add some padding at the top */
+        padding-top: 0; /* Add some padding at the top */
     }
 
     .box_left, .box_right {
@@ -164,7 +164,7 @@ a:hover{
         align-items: center;
         justify-content: flex-start; /* Align to top */
         min-height: 100vh;
-        padding-top: 20px; /* Add some padding at the top */
+        padding-top: 0; /* Add some padding at the top */
     }
     .box_left, .box_right {
         width: 95% !important;

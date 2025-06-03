@@ -18,7 +18,10 @@
             </div><br>
             <div class="pass">
                 <label>รหัสผ่าน</label><br><br>
-                <input type="password" name="password"  placeholder="กรุณากรอกรหัสผ่านของคุณ" required>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <input type="password" name="password" id="password" placeholder="กรุณากรอกรหัสผ่านของคุณ" required>
+                    <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 15px; cursor: pointer; color:#C2C2C2;"></i>
+                </div>
                 <!-- <i class="fa-solid fa-lock"></i> -->
             </div><br><br><br>
             <button type="submit">เข้าสู่ระบบ</button><br><br>
