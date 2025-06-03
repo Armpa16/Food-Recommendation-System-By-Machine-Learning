@@ -68,5 +68,39 @@
         </form>  
     </div>
     <!-- box_right-->
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const toggleCPassword = document.querySelector('#toggleCPassword');
+        const c_password = document.querySelector('#c_password');
+
+        function addToggleListener(toggleElement, passwordElement) {
+            if (toggleElement && passwordElement) {
+                toggleElement.addEventListener('click', function (e) {
+                    // toggle the type attribute
+                    const type = passwordElement.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordElement.setAttribute('type', type);
+                    // toggle the eye slash icon
+                    if (type === 'password') {
+                        this.classList.remove('fa-eye-slash');
+                        this.classList.add('fa-eye');
+                    } else {
+                        this.classList.remove('fa-eye');
+                        this.classList.add('fa-eye-slash');
+                    }
+                });
+            }
+        }
+
+        addToggleListener(togglePassword, password);
+        addToggleListener(toggleCPassword, c_password);
+
+        // CSS for hover effect (can also be in register.css)
+        document.querySelectorAll('.pass i, .con_pass i').forEach(icon => {
+            icon.addEventListener('mouseover', () => icon.style.color = '#000000');
+            icon.addEventListener('mouseout', () => icon.style.color = '#C2C2C2');
+        });
+    </script>
 </body>
 </html>
