@@ -87,7 +87,7 @@ if (!empty($age) && !empty($weight) && !empty($height)) {
         } elseif ($activity_level == "ปานกลาง") {
             $daily_calorie = $bmr * 1.55;
         } elseif ($activity_level == "มาก") {
-            $daily_calorie = $bmr * 1.7;
+            $daily_calorie = $bmr * 1.725;
         }
     }
 }

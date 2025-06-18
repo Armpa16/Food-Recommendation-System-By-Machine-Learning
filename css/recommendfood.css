@@ -10,6 +10,10 @@ body {
   background-color: white;
   flex-shrink: 0;
   transition: transform 0.3s ease-in-out; /* เพิ่ม animation ตอนเลื่อน */
+   /* Make .bar a flex container to position .mt-auto at the bottom */
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Assuming a full-height sidebar, consistent with responsive styles */
 }
 .custom-nav {
   width: 100%;          /* ปรับให้เต็มความกว้าง */
@@ -38,10 +42,12 @@ body {
 }
 .mt-auto{
   font-size: 18px;
+  margin-top: auto; /* This pushes the element to the bottom of its flex parent (.bar) */
+  padding-bottom: 20px;
 }
-.mt-auto a{
-  margin-top: 620px;
-}
+/* .mt-auto a{
+  padding-left: 45px;
+} */
 .nav-link.active{
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-radius: 0 !important;
@@ -387,7 +393,8 @@ body {
 
 .food-actions {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: center;
   align-items: center;
   margin-top: 8px;
 }
@@ -728,6 +735,9 @@ body > div.popup2-overlay.food-details-overlay > div > div.popup-content > h4 {
   margin: 0;
   text-align: left;
 }
+.nutrition-source {
+  border-top: 1px solid #eee;
+}
 
 .food-details-popup .nutrition-list li {
   margin-bottom: 10px;
@@ -739,8 +749,8 @@ body > div.popup2-overlay.food-details-overlay > div > div.popup-content > h4 {
 
 .food-details-popup .nutrition-list li i {
   margin-right: 10px;
-  color: #007bff; /* Or your theme color */
-  width: 20px; /* Fixed width for icons */
+  /* color: #007bff;  */
+  width: 20px; 
   text-align: center;
 }
 
@@ -781,7 +791,24 @@ body > div.popup2-overlay.food-details-overlay > div > div.popup-content > h4 {
 .food-details-popup .close-popup-btn-footer:hover {
   background-color: #5a6268;
 }
-
+.fa-fire {
+  color: #FF6B35; /* แคลอรี่ (พลังงาน) */
+}
+.fa-drumstick-bite {
+  color: #E94F37; /* โปรตีน */
+}
+.fa-bread-slice {
+  color: #FFD166; /* คาร์โบไฮเดรต */
+}
+.fa-bacon {
+  color: #EF476F; /* ไขมัน */
+}
+.fa-candy-cane {
+  color: #A162E8; /* น้ำตาล */
+}
+.fa-mortar-pestle {
+  color: #118AB2; /* โซเดียม */
+}
 
 /* Loading Spinner CSS */
 .loading-overlay {
@@ -847,6 +874,21 @@ border-color: #007bff transparent transparent transparent;
     transform: translateX(0);
 }
 
+@media (min-width: 992px) and (max-width: 1300px) {
+    .container {
+        width: 80%;
+        height: auto;
+    }
+    .content {
+        padding-left: 30px; /* ลดระยะห่างด้านซ้าย */
+        /* width: calc(100% - 40px); ปรับความกว้างให้เหมาะสม */
+    }
+    .calendar-container {
+        width: 100%;
+        height: auto;
+        padding: 0;
+    }
+}
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) { /* Adjust this breakpoint as needed */
     #sidebarToggle {
@@ -864,9 +906,9 @@ border-color: #007bff transparent transparent transparent;
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    /* .mt-auto a{
         margin-top: 170px;
-    }
+    } */
     .content {
         margin-left: 0; 
         padding: 20px; 
@@ -1062,6 +1104,12 @@ border-color: #007bff transparent transparent transparent;
       align-items: center;
         justify-content: center;
     }
+    body > div.swal2-container.swal2-center.swal2-backdrop-show > div{
+        width: 90% ;
+    }
+    .nutrition-source span{
+        font-size: 14px;
+    }
 }
 
 @media screen and (min-width: 768px) and (max-width: 900px) {
@@ -1080,9 +1128,9 @@ border-color: #007bff transparent transparent transparent;
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    /* .mt-auto a{
         margin-top: 580px;
-    }
+    } */
     .content {
         margin-left: 100px; 
         padding: 20px; 
@@ -1185,4 +1233,3 @@ border-color: #007bff transparent transparent transparent;
 
     
 }
-

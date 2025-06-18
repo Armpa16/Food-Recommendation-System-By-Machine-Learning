@@ -10,6 +10,9 @@ body {
     background-color: white;
     flex-shrink: 0;
     transition: transform 0.3s ease-in-out; /* เพิ่ม animation ตอนเลื่อน */
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Assuming a full-height sidebar, consistent with responsive styles */
 }
 .custom-nav {
     width: 100%;          /* ปรับให้เต็มความกว้าง */
@@ -38,10 +41,12 @@ body {
 }
 .mt-auto{
     font-size: 18px;
+    margin-top: auto; /* This pushes the element to the bottom of its flex parent (.bar) */
+    padding-bottom: 20px;
 }
-.mt-auto a{
+/* .mt-auto a{
     margin-top: 620px;
-}
+} */
 .nav-link.active{
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 0 !important;
@@ -166,7 +171,7 @@ span p{
     align-items: center;
     justify-content: center; 
     color: rgb(53, 53, 53); 
-    margin-left: -15px;
+    /* margin-left: -5px; */
 }
 .dis{
     width: 250px;
@@ -291,6 +296,17 @@ h1{
     transform: translateX(0);
 }
 
+@media (min-width: 992px) and (max-width: 1300px) {
+    .container {
+        width: 80%;
+        height: auto;
+    }
+    .content {
+        padding-left: 30px; /* ลดระยะห่างด้านซ้าย */
+        /* width: calc(100% - 40px); ปรับความกว้างให้เหมาะสม */
+    }
+}
+
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) { /* Adjust this breakpoint as needed */
     #sidebarToggle {
@@ -308,9 +324,9 @@ h1{
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    /* .mt-auto a{
         margin-top: 170px;
-    }
+    } */
     .content {
         margin-left: 0; 
         padding: 20px; 
@@ -375,18 +391,20 @@ h1{
         width: 100%; 
         height: auto; 
         margin-top: 0;
-        margin-left: 20px;
+        margin-left: 0;
     }
     .bmi_show .cercle {
         width: 60px;
         height: 60px;
         font-size: 24px; 
+        margin-left: 7px;
     }
     .bmi-text-container {
         margin-left: 10px; 
         text-align: left; 
         word-wrap: break-word; 
         overflow-wrap: break-word; 
+        max-width: 90px;
     }
     .dis{
         width: 80%;
@@ -398,13 +416,13 @@ h1{
         width: 100%; 
         height: auto; 
         margin-top: 0;
-        margin-left: 20px;
+        margin-left: 0;
     }
     .diseases_show .cercle {
         width: 56px;
         height: 56px;
         font-size: 24px; 
-        margin-left: -15px;
+        margin-left: 7px;
         margin-top: -5px;
     }
     .disease-list { 
@@ -413,6 +431,7 @@ h1{
         overflow-wrap: break-word;  
         max-width: 102px;           
         justify-content: flex-start; 
+        margin-left: 7px;
     }
     .disease-list span {
         font-size: 14px; 
@@ -461,9 +480,9 @@ h1{
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    /* .mt-auto a{
         margin-top: 580px;
-    }
+    } */
     .content {
         margin-left: 100px; 
         padding: 20px; 
@@ -528,7 +547,7 @@ h1{
         width: 100%; 
         height: auto; 
         margin-top: 0;
-        margin-left: 20px;
+        margin-left: 10px;
     }
     .bmi_show .cercle {
         width: 60px;
@@ -550,7 +569,7 @@ h1{
         width: 100%; 
         height: auto; 
         margin-top: 0;
-        margin-left: 20px;
+        margin-left: 10px;
     }
     .diseases_show .cercle {
         width: 56px;
@@ -565,7 +584,7 @@ h1{
         overflow-wrap: break-word;  
         max-width: 150px;           
         justify-content: flex-start; 
-        margin-left: -60px;
+        margin-left: -40px;
     }
     .disease-list span {
         font-size: 14px; 

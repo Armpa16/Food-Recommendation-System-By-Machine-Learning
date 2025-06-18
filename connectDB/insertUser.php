@@ -24,18 +24,12 @@ $sql_check = "SELECT * FROM users WHERE username = '$user'";
 $result = $conn->query($sql_check);
 
 if ($result->num_rows > 0) {
-    echo "<script>
-            alert('ชื่อผู้ใช้นี้ถูกใช้ไปแล้ว กรุณาเลือกชื่ออื่น');
-            window.location.href='/Food/register.php';
-          </script>";
+    header("Location: /Food/register.php?status=username_exists");
     exit();
 }
 // Check if passwords match
 if ($password !== $c_password) {
-    echo "<script>
-            alert('รหัสผ่านไม่ตรงกัน กรุณาลองใหม่');
-            window.location.href='/Food/register.php';
-          </script>";
+    header("Location: /Food/register.php?status=password_mismatch");
     exit();
 }
 
@@ -46,15 +40,13 @@ $sql = "INSERT INTO users (username, email, password)
         VALUES ('$user','$email', '$hashed_password')";
 
 if ($conn->query($sql) === TRUE) {
-    echo "<script>
-            alert('สร้างบัญชีสำเร็จ! กรุณากลับไปล็อกอิน');
-            window.location.href='/Food/loginform.php';
-          </script>";
+    // ส่ง status=registered_successfully ไปยัง loginform.php เพื่อให้แสดง SweetAlert (ถ้าต้องการ)
+    header("Location: /Food/loginform.php?status=registered_successfully");
+    exit();
+
 } else {
-    echo "<script>
-    alert('เกิดข้อผิดพลาด: " . addslashes($conn->error) . "');
-    window.location.href='/Food/register.php';
-  </script>";
+    header("Location: /Food/register.php?status=registration_failed&error=" . urlencode($conn->error));
+    exit();
 }
 
 $conn->close();

@@ -28,7 +28,6 @@ RF_MODEL_FEATURES = ['calories', 'protein', 'carbohydrate', 'sugar', 'fat', 'sod
                      'category_encoded', 'sugar_to_carb_ratio', 'fat_to_calorie_ratio']
 
 
-
 # ฟังก์ชันเชื่อมต่อกับฐานข้อมูล MySQL
 def get_db_connection():
     try:
@@ -43,133 +42,81 @@ def get_db_connection():
         print(f"Error connecting to MySQL: {err}")
         raise
 
-# ฟังก์ชันทำนายประเภทอาหารด้วย ID ของอาหาร (ใช้โมเดล Random Forest)
-def predict_food_type_by_id(food_id: int): # ควรใช้ food_id ให้สอดคล้องกับ schema
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    try:
-        # ดึงข้อมูลอาหารจากฐานข้อมูล (ควรใช้ food_id)
-        cursor.execute("SELECT * FROM food_menu WHERE food_id = %s", (food_id,))
-        row = cursor.fetchone()
-
-        if not row:
-            return {'error': 'Food item not found'}
-
-        df = pd.DataFrame([row])
-
-        # แปลง category เป็นเลขตาม encoder ที่เทรนไว้
-        df['category_encoded'] = category_encoder.transform(df[['category']])
-
-        # คำนวณอัตราส่วนน้ำตาลต่อคาร์โบไฮเดรต (เพิ่ม 1e-8 เพื่อป้องกันการหารด้วยศูนย์)
-        df['sugar_to_carb_ratio'] = df['sugar'] / (df['carbohydrate'] + 1e-8)
-        # คำนวณอัตราส่วนไขมันต่อแคลอรี่ (เพิ่ม 1e-8 เพื่อป้องกันการหารด้วยศูนย์)
-        df['fat_to_calorie_ratio'] = df['fat'] / (df['calories'] + 1e-8)
-
-        # เลือกฟีเจอร์ที่ใช้ในการทำนาย
-        X = df[RF_MODEL_FEATURES] # ใช้ Global RF_MODEL_FEATURES
-
-        # จัดการข้อมูลที่หายไป (imputation) และปรับสเกลข้อมูล (scaling)
-        X_imputed = imputer.transform(X)
-        X_scaled = scaler.transform(X_imputed)
-
-        # ทำนายประเภทอาหารด้วยโมเดล Random Forest
-        y_pred = rf_model.predict(X_scaled)
-        # แปลงผลการทำนาย (ตัวเลข) กลับเป็นชื่อประเภทอาหาร (ข้อความ)
-        predicted_label = label_encoder.inverse_transform(y_pred.ravel()) # Added .ravel()
-
-        return {
-            'food_id': food_id,
-            'food_name': row['food_name'], 
-            'predicted_food_type': predicted_label[0]
-        }
-
-    except Exception as e:
-        return {'error': str(e)}
-
-    finally:
-        if cursor: cursor.close()
-        if conn and conn.is_connected(): conn.close()
-
-# ฟังก์ชันช่วยในการทำนายประเภทอาหารสำหรับ DataFrame ของรายการอาหาร (ใช้โมเดล Random Forest)
+# ฟังก์ชันทำนายประเภทอาหารสำหรับ DataFrame ของเมนูอาหาร (ใช้โมเดล Random Forest)
 def predict_food_types_for_dataframe(df: pd.DataFrame):
     """
-    ทำนายประเภทอาหารสำหรับรายการอาหารหลายรายการที่อยู่ใน DataFrame
-    โดยใช้โมเดล Random Forest ที่ฝึกไว้แล้ว
-    DataFrame (df) ที่รับเข้ามาควรมีคอลัมน์ที่จำเป็นสำหรับ RF_MODEL_FEATURES
+    ทำนายประเภทอาหารสำหรับ DataFrame ของเมนูอาหารโดยใช้ Random Forest Model
 
-    คืนค่า:
-        - numpy.ndarray ของชื่อประเภทอาหารที่ทำนายได้
-        - pandas.Index ของแถวที่ผ่านการประมวลผลและใช้ในการทำนาย
-    หากเกิดข้อผิดพลาด หรือไม่สามารถทำนายได้ จะคืนค่า (numpy.array([]), pandas.Index([]))
+    Parameters:
+        df (pd.DataFrame): ข้อมูลอาหารที่ต้องมีคอลัมน์สำคัญ เช่น calories, sugar, fat, protein, sodium, carbohydrate, category
+
+    Returns:
+        tuple:
+            - numpy.ndarray: ชื่อประเภทอาหารที่ทำนายได้
+            - pandas.Index: index ของแถวใน DataFrame ที่สามารถทำนายได้สำเร็จ
     """
+    
     if df.empty:
         return np.array([]), pd.Index([])
 
+    # ✅ Clone ข้อมูลเพื่อป้องกันแก้ไขต้นฉบับ
+    df_proc = df.copy()
 
-    df_processed = df.copy()
+    # ✅ แปลงคอลัมน์ที่จำเป็นเป็นตัวเลข
+    numeric_cols = ['calories', 'protein', 'carbohydrate', 'sugar', 'fat', 'sodium']
+    for col in numeric_cols:
+        df_proc[col] = pd.to_numeric(df_proc[col], errors='coerce')
 
-    # คอลัมน์ที่ควรเป็นตัวเลขสำหรับโมเดล Random Forest
-    numeric_cols_for_rf = ['calories', 'protein', 'carbohydrate', 'sugar', 'fat', 'sodium']
-    for col in numeric_cols_for_rf:
-        # แปลงคอลัมน์เป็นตัวเลข, ถ้าแปลงไม่ได้จะให้เป็น NaN (Not a Number)
-        df_processed[col] = pd.to_numeric(df_processed[col], errors='coerce')
-    
-     # ลบแถวที่ข้อมูลตัวเลขที่จำเป็นสำหรับโมเดล RF เป็น NaN (หลังจากแปลงเป็นตัวเลขแล้ว)
-    df_processed.dropna(subset=numeric_cols_for_rf, inplace=True)
-    if df_processed.empty:
-        print("ℹ️ DataFrame ว่างเปล่าหลังจากแปลงเป็นตัวเลขและลบ NaN สำหรับฟีเจอร์ RF")
+    # ✅ ลบแถวที่มี NaN ในคอลัมน์ตัวเลขสำคัญ
+    df_proc.dropna(subset=numeric_cols, inplace=True)
+    if df_proc.empty:
+        print("ℹ️ ไม่มีข้อมูลที่สามารถใช้งานได้หลังลบ NaN")
         return np.array([]), pd.Index([])
 
-    # แปลงคอลัมน์ 'category' (หมวดหมู่อาหาร)
-    if 'category' not in df_processed.columns:
-        print("⚠️ ไม่พบคอลัมน์ 'category' ใน DataFrame, คืนค่าการทำนายว่างเปล่า")
+    # ✅ ตรวจสอบและ encode คอลัมน์ 'category'
+    if 'category' not in df_proc.columns:
+        print("⚠️ ไม่พบคอลัมน์ 'category'")
         return np.array([]), pd.Index([])
-    
-    # จัดการกับค่า NaN หรือ None ในคอลัมน์ 'category' ก่อนทำการ encode
-    # โดยแทนที่ด้วย 'Unknown' หรือค่า default อื่นที่เหมาะสม
-    df_processed['category'] = df_processed['category'].fillna('Unknown') # Or a more appropriate default
-    
+
+    df_proc['category'] = df_proc['category'].fillna('Unknown')
+
     try:
-        # แปลง 'category' เป็นตัวเลขด้วย category_encoder
-        df_processed['category_encoded'] = category_encoder.transform(df_processed[['category']])
+        df_proc['category_encoded'] = category_encoder.transform(df_proc[['category']])
     except Exception as e:
-        # อาจเกิด error ถ้า category_encoder เจอหมวดหมู่ที่ไม่เคยเห็นตอนฝึกโมเดล
-        # และไม่ได้ตั้งค่าให้จัดการกับ unknown values
-        print(f"⚠️ เกิดข้อผิดพลาดระหว่างการ encode หมวดหมู่สำหรับ batch prediction: {e}. ตรวจสอบหมวดหมู่ที่ไม่รู้จัก")
+        print(f"⚠️ Encoding หมวดหมู่ล้มเหลว: {e}")
         return np.array([]), pd.Index([])
 
+    # ✅ สร้างฟีเจอร์ใหม่
+    df_proc['sugar_to_carb_ratio'] = df_proc['sugar'] / (df_proc['carbohydrate'] + 1e-8)
+    df_proc['fat_to_calorie_ratio'] = df_proc['fat'] / (df_proc['calories'] + 1e-8)
 
-    # สร้างฟีเจอร์ใหม่
-    df_processed['sugar_to_carb_ratio'] = df_processed['sugar'] / (df_processed['carbohydrate'] + 1e-8)
-    df_processed['fat_to_calorie_ratio'] = df_processed['fat'] / (df_processed['calories'] + 1e-8)
-
-    # เลือกฟีเจอร์, จัดการข้อมูลที่หายไป (impute), และปรับสเกล (scale)
-    # ตรวจสอบว่ามีฟีเจอร์ที่โมเดล RF ต้องการครบถ้วนหรือไม่
-    missing_features = [f for f in RF_MODEL_FEATURES if f not in df_processed.columns]
-    if missing_features:
-        print(f"⚠️ ขาดฟีเจอร์สำหรับโมเดล RF: {missing_features}. คืนค่าการทำนายว่างเปล่า")
+    # ✅ ตรวจสอบฟีเจอร์ที่ต้องใช้
+    missing = [f for f in RF_MODEL_FEATURES if f not in df_proc.columns]
+    if missing:
+        print(f"⚠️ ขาดฟีเจอร์: {missing}")
         return np.array([]), pd.Index([])
-    X = df_processed[RF_MODEL_FEATURES]
-    
+
+    # ✅ เตรียมข้อมูลสำหรับโมเดล
+    X = df_proc[RF_MODEL_FEATURES]
+
     try:
-        X_imputed = imputer.transform(X) # ใช้ imputer ที่โหลดไว้เพื่อจัดการกับข้อมูลที่หายไป
-        X_scaled = scaler.transform(X_imputed) # ใช้ scaler ที่โหลดไว้เพื่อปรับสเกลข้อมูล
+        X_imputed = imputer.transform(X)
+        X_scaled = scaler.transform(X_imputed)
     except Exception as e:
-        print(f"เกิดข้อผิดพลาดระหว่างการ imputation/scaling: {e}")
+        print(f"⚠️ ปัญหาในการ preprocess (imputer/scaler): {e}")
         return np.array([]), pd.Index([])
 
-    if X_scaled.shape[0] == 0:  # ไม่มีข้อมูลเหลือให้ทำนาย
-        print("ℹ️ ไม่มีข้อมูลสำหรับการทำนายหลังจากขั้นตอน preprocessing")
+    if X_scaled.shape[0] == 0:
+        print("ℹ️ ไม่มีข้อมูลเหลือหลัง preprocess")
         return np.array([]), pd.Index([])
 
-    # ทำนายผลด้วยโมเดล Random Forest
-    y_pred_numeric = rf_model.predict(X_scaled)
-    # แปลงผลการทำนาย (ตัวเลข) กลับเป็นชื่อประเภทอาหาร (ข้อความ)
-    predicted_type_names = label_encoder.inverse_transform(y_pred_numeric.ravel()) # Added .ravel()
-    # คืนค่าชื่อประเภทอาหารที่ทำนายได้ และ index ของแถวที่ผ่านการประมวลผล
-    # เพื่อให้สามารถนำผลลัพธ์ไปเชื่อมโยงกับข้อมูลเดิมได้อย่างถูกต้อง
-    return predicted_type_names, df_processed.index 
+    # ✅ ทำนายผล
+    y_pred = rf_model.predict(X_scaled)
+
+    # ✅ แปลงผลลัพธ์เป็นชื่อประเภทอาหาร
+    y_labels = label_encoder.inverse_transform(y_pred.ravel())
+
+    return y_labels, df_proc.index
 
 # ฟังก์ชันสำหรับแปลงอ็อบเจกต์ให้อยู่ในรูปแบบที่ปลอดภัยสำหรับ JSON
 def convert_to_json_safe(obj):
@@ -315,106 +262,104 @@ def predict_food_type(user_data_dict):
 
 # ฟังก์ชันดึงเมนูอาหาร ตามประเภทอาหารที่ทำนายจากโมเดล RF
 def get_meal_set(user_predicted_food_type_name: str, target_calories: float):
+    """
+    สร้างชุดเมนูอาหารตามประเภทอาหารที่โมเดล Random Forest ทำนาย และพลังงานที่ผู้ใช้ต้องการ
+
+    Parameters:
+        user_predicted_food_type_name (str): ชื่อประเภทอาหารที่โมเดลทำนาย เช่น 'น้ำตาลต่ำ'
+        target_calories (float): พลังงานเป้าหมายสำหรับมื้อนี้
+
+    Returns:
+        dict: ชุดเมนูอาหารที่เลือกตามหมวดหมู่ เช่น { 'อาหารจานหลัก': {...}, 'ผลไม้': {...}, ... }
+    """
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
+    meal_categories = ["อาหารจานหลัก", "ผลไม้", "ขนม", "เครื่องดื่ม", "ฟาสต์ฟู้ด"]
     meal_set = {}
-    meal_categories_to_find = ["อาหารจานหลัก", "ผลไม้", "ขนม", "เครื่องดื่ม", "ฟาสต์ฟู้ด"]
     remaining_calories = target_calories
 
     try:
-        # ดึงรายการอาหารทั้งหมดจากฐานข้อมูล food_menu
-        cursor.execute("""
-            SELECT food_id, food_name, calories, protein, carbohydrate, sugar, fat, sodium, category, image_url, amount
-            FROM food_menu
-        """)
+        # ดึงข้อมูลเมนูทั้งหมดจากฐานข้อมูล
+        cursor.execute("SELECT * FROM food_menu")
         all_foods_raw = cursor.fetchall()
 
         if not all_foods_raw:
-            print("❌ No food items found in the database for get_meal_set.")
+            print("❌ ไม่พบเมนูอาหารในฐานข้อมูล")
             return None
 
         all_foods_df = pd.DataFrame(all_foods_raw)
-        # เพิ่มคอลัมน์ index เพื่อเก็บ index ต้นฉบับ
-        all_foods_df['original_idx'] = all_foods_df.index
+        all_foods_df['original_idx'] = all_foods_df.index  # เก็บ index เดิม
 
+        # ทำนายประเภทอาหารสำหรับเมนูทั้งหมด
+        predicted_types, processed_idx = predict_food_types_for_dataframe(all_foods_df)
 
-        # ทำนายประเภทอาหารสำหรับแต่ละรายการใน DataFrame
-        rf_predictions_list, processed_indices = predict_food_types_for_dataframe(all_foods_df)
-        processed_indices = pd.Index(processed_indices)  # ✅ แปลงให้อยู่ในรูปแบบ Index เพื่อใช้กับ .loc และ .empty ได้
-
-        
-         # ตรวจสอบว่ามีการทำนายหรือไม่
-        if rf_predictions_list.size == 0: 
-            print(f"ℹ️ RF Model did not return predictions for any food items (or an error occurred during prediction).")
-            # กรณีไม่มีการทำนายหรือเกิดข้อผิดพลาดในการทำนาย
+        # เพิ่มผลการทำนายเข้าไปใน DataFrame
+        if predicted_types.size == 0:
             all_foods_df['rf_predicted_food_type'] = pd.Series(dtype='object')
         else:
-            # แปลงผลการทำนายเป็น Series และจัดเก็บในคอลัมน์ใหม่
-            temp_prediction_col = pd.Series(index=all_foods_df.index, dtype='object')
-            if not processed_indices.empty: # ตรวจสอบว่ามีการประมวลผลหรือไม่
-                 temp_prediction_col.loc[processed_indices] = rf_predictions_list
-            all_foods_df['rf_predicted_food_type'] = temp_prediction_col
+            temp_col = pd.Series(index=all_foods_df.index, dtype='object')
+            temp_col.loc[processed_idx] = predicted_types
+            all_foods_df['rf_predicted_food_type'] = temp_col
 
-
-        # กรองรายการอาหารที่ทำนายประเภทอาหารแล้ว
-        matched_foods_df = all_foods_df[all_foods_df['rf_predicted_food_type'].isin(user_predicted_food_type_name)]
-
-
-        if matched_foods_df.empty:
-            print(f"❌ No food items found where RF model prediction ('{user_predicted_food_type_name}') matches for user.")
+        # กรองเฉพาะเมนูที่ทำนายว่าอยู่ในประเภทที่ผู้ใช้ต้องการ
+        matched_df = all_foods_df[all_foods_df['rf_predicted_food_type'].isin(user_predicted_food_type_name)]
+        if matched_df.empty:
+            print(f"❌ ไม่พบเมนูอาหารที่ตรงกับประเภท '{user_predicted_food_type_name}'")
             return None
 
-        # แสดงรายการอาหารที่ตรงกับประเภทที่ทำนาย
-        for meal_category in meal_categories_to_find:
-            # กรองรายการอาหารที่ตรงกับประเภทอาหารที่ต้องการ
-            matched_foods_df['calories'] = pd.to_numeric(matched_foods_df['calories'], errors='coerce')
-            
-            candidate_meals_for_category = matched_foods_df[
-                (matched_foods_df['category'] == meal_category) &
-                (matched_foods_df['calories'] <= remaining_calories) &
-                (matched_foods_df['calories'].notna()) # ตรวจสอบว่า calories ไม่เป็น NaN
+        # เลือกเมนูตามหมวดหมู่ โดยไม่ให้เกินแคลอรี่เป้าหมาย
+        matched_df['calories'] = pd.to_numeric(matched_df['calories'], errors='coerce')
+
+        for category in meal_categories:
+            candidates = matched_df[
+                (matched_df['category'] == category) &
+                (matched_df['calories'] <= remaining_calories) &
+                (matched_df['calories'].notna())
             ]
 
-            if not candidate_meals_for_category.empty:
-                selected_meal_series = candidate_meals_for_category.sample(1).iloc[0]
+            if not candidates.empty:
+                meal = candidates.sample(1).iloc[0]
                 meal_details = {
-                    'food_id': selected_meal_series['food_id'],
-                    'food_name': selected_meal_series['food_name'],
-                    'calories': float(selected_meal_series['calories']),
-                    'protein': float(selected_meal_series.get('protein', 0)), # ใช้ get() เพื่อป้องกัน KeyError
-                    'carbohydrate': float(selected_meal_series.get('carbohydrate', 0)),
-                    'sugar': float(selected_meal_series.get('sugar',0)),
-                    'fat': float(selected_meal_series.get('fat',0)),
-                    'sodium': float(selected_meal_series.get('sodium',0)),
-                    'category': selected_meal_series['category'],
-                    'image_url': selected_meal_series.get('image_url', 'default-image.jpg'),
-                    'amount': selected_meal_series.get('amount', '1 จาน')
+                    'food_id': meal['food_id'],
+                    'food_name': meal['food_name'],
+                    'calories': float(meal['calories']),
+                    'protein': float(meal.get('protein', 0)),
+                    'carbohydrate': float(meal.get('carbohydrate', 0)),
+                    'sugar': float(meal.get('sugar', 0)),
+                    'fat': float(meal.get('fat', 0)),
+                    'sodium': float(meal.get('sodium', 0)),
+                    'category': meal['category'],
+                    'image_url': meal.get('image_url', 'default-image.jpg'),
+                    'amount': meal.get('amount', '1 จาน')
                 }
-                meal_set[meal_category] = meal_details
+                meal_set[category] = meal_details
                 remaining_calories -= meal_details['calories']
-                print(f"✅ Found meal for {meal_category}: {meal_details['food_name']} ({meal_details['calories']} kcal)")
+                print(f"✅ เลือก {category}: {meal_details['food_name']} ({meal_details['calories']} kcal)")
             else:
-                print(f"❌ No meal found for category: {meal_category} (user type: {user_predicted_food_type_name}, remaining cal: {remaining_calories:.2f})")
-        
+                print(f"⚠️ ไม่พบเมนูสำหรับหมวด '{category}' (เหลือ {remaining_calories:.2f} kcal)")
+
         if not meal_set:
-            print(f"❌ No meals could be assembled for user type '{user_predicted_food_type_name}' with target calories {target_calories}.")
+            print(f"❌ ไม่สามารถจัดชุดเมนูสำหรับประเภท '{user_predicted_food_type_name}' ได้เลย")
             return None
-        
-        print(f"✅ เมนูอาหารที่เลือก (user type: {user_predicted_food_type_name}):", meal_set)
+
+        print(f"✅ เมนูที่เลือก: {meal_set}")
         return meal_set
 
     except mysql.connector.Error as err:
-        print(f"❌ MySQL Error in get_meal_set: {err}")
+        print(f"❌ MySQL Error: {err}")
         return None
+
     except Exception as e:
         import traceback
-        print(f"❌ Unexpected error in get_meal_set: {e}")
+        print(f"❌ Unexpected error: {e}")
         traceback.print_exc()
         return None
+
     finally:
-        if 'cursor' in locals() and cursor: cursor.close()
-        if 'conn' in locals() and conn and conn.is_connected(): conn.close()
+        if cursor: cursor.close()
+        if conn and conn.is_connected(): conn.close()
+
 
 
 # API เเนะนำอาหาร

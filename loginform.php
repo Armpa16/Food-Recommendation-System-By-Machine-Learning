@@ -6,6 +6,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="css/loginform.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="box_left">
@@ -29,17 +30,26 @@
                 <hr>&nbsp;&nbsp;&nbsp;&nbsp;หากยังไม่มีบัญชี&nbsp;&nbsp;&nbsp;&nbsp;<hr>
             </div><br><br>
             <a href="register.php">สมัครสมาชิก</a>
-            <?php
-                if (isset($_GET['status'])) {
-                    $status = $_GET['status'];
-                    if ($status == 1){
-                        echo "<script>alert('ชื่อผู้ใช้งานไม่ถูกต้อง');</script>";
-                    }else if($status==2) {
-                        echo "<script>alert('รหัสผ่านไม่ถูกต้อง');</script>";  
+        </form>
+        <?php
+            if (isset($_GET['status'])) {
+                $status = $_GET['status'];
+                $title = 'เกิดข้อผิดพลาด!';
+                $text = '';
+                $icon = 'error';
+
+                if ($status == 1) {
+                    $text = 'ชื่อผู้ใช้งานไม่ถูกต้อง';
+                } else if ($status == 2) {
+                    $text = 'รหัสผ่านไม่ถูกต้อง';
+                }
+                // สามารถเพิ่มเงื่อนไข status อื่นๆ ได้ตามต้องการ
+
+                if (!empty($text)) {
+                    echo "<script> Swal.fire({ title: '$title', text: '$text', icon: '$icon', confirmButtonText: 'ตกลง' }); </script>";
                 }
             }
-            ?>
-        </form>  
+        ?>
     </div>
     <!-- box_left -->
     <div class="box_right">

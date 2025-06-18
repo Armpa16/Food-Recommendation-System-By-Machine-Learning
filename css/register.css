@@ -231,5 +231,12 @@ a:hover{
     .regis hr {
         width: 70px; /* Adjust width */
     }
+    body > div.swal2-container.swal2-center.swal2-backdrop-show > div{
+        width: 90% ;
+    }
+    body > div.swal2-container.swal2-center.swal2-backdrop-show > div > div.swal2-actions > button.swal2-confirm.swal2-styled {
+        width: 100%;
+
+    }
 }
 

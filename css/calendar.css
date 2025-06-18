@@ -13,6 +13,9 @@ body {
     background-color: white;
     flex-shrink: 0;
     transition: transform 0.3s ease-in-out; /* เพิ่ม animation ตอนเลื่อน */
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Assuming a full-height sidebar, consistent with responsive styles */
 }
 
 .custom-nav {
@@ -50,11 +53,13 @@ body {
 
 .mt-auto {
     font-size: 18px;
+    margin-top: auto; /* This pushes the element to the bottom of its flex parent (.bar) */
+    padding-bottom: 20px;
 }
 
-.mt-auto a {
+/* .mt-auto a {
     margin-top: 620px;
-}
+} */
 
 .nav-link.active {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -216,6 +221,16 @@ body {
     transform: translateX(0);
 }
 
+@media (min-width: 992px) and (max-width: 1300px) {
+    .container {
+        width: 80%;
+        height: auto;
+    }
+    .content {
+        padding-left: 90px; /* ลดระยะห่างด้านซ้าย */
+        /* width: calc(100% - 40px); ปรับความกว้างให้เหมาะสม */
+    }
+}
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) { /* Adjust this breakpoint as needed */
     #sidebarToggle {
@@ -233,9 +248,9 @@ body {
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    /* .mt-auto a{
         margin-top: 170px;
-    }
+    } */
     .content {
         margin-left: 0; 
         padding: 20px; 
@@ -301,9 +316,9 @@ body {
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    /* .mt-auto a{
         margin-top: 580px;
-    }
+    } */
     .content {
         margin-left: 100px; 
         padding: 20px; 

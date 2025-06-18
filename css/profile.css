@@ -10,6 +10,10 @@ body {
     background-color: white;
     flex-shrink: 0;
     transition: transform 0.3s ease-in-out; /* เพิ่ม animation ตอนเลื่อน */
+     /* Make .bar a flex container to position .mt-auto at the bottom */
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Assuming a full-height sidebar, consistent with responsive styles */
 }
 .custom-nav {
     width: 100%;          /* ปรับให้เต็มความกว้าง */
@@ -38,10 +42,12 @@ body {
 }
 .mt-auto{
     font-size: 18px;
+    margin-top: auto; /* This pushes the element to the bottom of its flex parent (.bar) */
+    padding-bottom: 20px;
 }
-.mt-auto a{
+/* .mt-auto a{
     margin-top: 620px;
-}
+} */
 .nav-link.active{
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     border-radius: 0 !important;
@@ -287,6 +293,24 @@ body {
     transform: translateX(0);
 }
 
+@media (min-width: 992px) and (max-width: 1300px) {
+    .container {
+        width: 80%;
+        height: auto;
+    }
+    .content {
+        padding-left: 50px; /* ลดระยะห่างด้านซ้าย */
+        /* width: calc(100% - 40px); ปรับความกว้างให้เหมาะสม */
+    }
+    .card {
+        width: 130%; /* ปรับให้เต็มความกว้าง */
+        padding: 20px; /* ลดขนาด padding */
+        height: auto; /* ปรับให้สูงตามเนื้อหา */
+    }
+    .bar{
+        height: 100vh !important; /* ให้ความสูงเต็มหน้าจอ */
+    }
+}
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) { /* Adjust this breakpoint as needed */
     #sidebarToggle {
@@ -297,16 +321,17 @@ body {
         position: fixed; 
         top: 0;
         left: 0;
-        height: 100vh !important; ; 
+        height: 100vh !important;
         width: 280px;
         transform: translateX(-100%); 
         z-index: 1040; 
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    
+    /* .mt-auto a{
         margin-top: 170px;
-    }
+    } */
     .content {
         margin-left: 0; 
         padding: 20px; 
@@ -365,6 +390,9 @@ body {
         margin-left: 20px; 
         
     }
+    body > div.swal2-container.swal2-center.swal2-backdrop-show > div {
+        width: 90%; 
+    }
 }
 @media screen and (min-width: 768px) and (max-width: 900px) {
     #sidebarToggle {
@@ -382,9 +410,9 @@ body {
         box-shadow: 3px 0 6px rgba(0,0,0,0.1);
         background-color: #f8f9fa; 
     }
-    .mt-auto a{
+    /* .mt-auto a{
         margin-top: 580px;
-    }
+    } */
     .content {
         margin-left: 100px; 
         padding: 20px; 

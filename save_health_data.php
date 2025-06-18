@@ -33,17 +33,38 @@ if ($row['count'] == 0) {
 $stmtCheck->close();
 
 
-// รับค่าจากฟอร์ม
-$gender = mysqli_real_escape_string($conn, $_POST['gender']);
-$age = mysqli_real_escape_string($conn, $_POST['age']);
-$weight = mysqli_real_escape_string($conn, $_POST['weight']);
-$height = mysqli_real_escape_string($conn, $_POST['height']);
-$diseases = mysqli_real_escape_string($conn, $_POST['diseases']);
-$activity_level = mysqli_real_escape_string($conn, $_POST['activity_level']);
+// รับค่าดิบจากฟอร์มสำหรับคำนวณ
+$raw_gender = isset($_POST['gender']) ? $_POST['gender'] : '';
+$raw_age = isset($_POST['age']) ? (int)$_POST['age'] : 0;
+$raw_weight = isset($_POST['weight']) ? (float)$_POST['weight'] : 0.0;
+$raw_height = isset($_POST['height']) ? (float)$_POST['height'] : 0.0;
+$raw_activity_level = isset($_POST['activity_level']) ? $_POST['activity_level'] : '';
+
+// ประมวลผลข้อมูลโรคประจำตัว
+$processed_diseases_string = "ไม่มีโรค"; // ค่าเริ่มต้นหากไม่ได้เลือก หรือเลือก "ไม่มีโรค"
+if (isset($_POST['diseases']) && is_array($_POST['diseases'])) {
+    $selected_diseases_array = $_POST['diseases'];
+    if (!empty($selected_diseases_array)) {
+        if (in_array('ไม่มีโรค', $selected_diseases_array)) {
+            $processed_diseases_string = 'ไม่มีโรค'; // หากเลือก "ไม่มีโรค" ให้ใช้ค่านี้เท่านั้น
+        } else {
+            $processed_diseases_string = implode(', ', $selected_diseases_array); // รวมโรคอื่นๆ เป็นสตริง
+        }
+    }
+}
+
+// Escape ค่าที่จะบันทึกลง DB ที่เป็นสตริง
+$gender_db = mysqli_real_escape_string($conn, $raw_gender);
+$activity_level_db = mysqli_real_escape_string($conn, $raw_activity_level);
+$diseases_db = mysqli_real_escape_string($conn, $processed_diseases_string);
+
 
 // คำนวณ BMI
-$height_met = $height / 100;
-$bmi = $weight / ($height_met * $height_met);
+$height_met = $raw_height / 100;
+$bmi = 0;
+if ($height_met > 0) {
+    $bmi = $raw_weight / ($height_met * $height_met);
+}
 $bmi = round($bmi, 2); // เปลี่ยนเป็นทศนิยม 2 ตำแหน่ง
 
 
@@ -59,36 +80,37 @@ if ($bmi < 18.50) {
 }
 
 $daily_calorie = '';
-if($gender == "ชาย") {
+if($raw_gender == "ชาย") {
     //คำนวณ BMR สำหรับเพศชาย
-    $bmr = 66 + (13.7 * $weight) + (5 * $height) - (6.8 * $age);
+    $bmr = 66 + (13.7 * $raw_weight) + (5 * $raw_height) - (6.8 * $raw_age);
     //คำนวณระดับกิจกรรม
-    if($activity_level == "น้อย") {
+    if($raw_activity_level == "น้อย") {
         $daily_calorie = $bmr * 1.375;
-    } elseif($activity_level == "ปานกลาง") {
+    } elseif($raw_activity_level == "ปานกลาง") {
         $daily_calorie = $bmr * 1.55;
-    } elseif($activity_level == "มาก") {
-        $daily_calorie = $bmr * 1.7;
+    } elseif($raw_activity_level == "มาก") {
+        $daily_calorie = $bmr * 1.725;
     }
-} elseif($gender == "หญิง") {
+} elseif($raw_gender == "หญิง") {
     //คำนวณ BMR สำหรับเพศหญิง
-    $bmr = 655 + (9.6 * $weight) + (1.8 * $height) - (4.7 * $age);
+    $bmr = 655 + (9.6 * $raw_weight) + (1.8 * $raw_height) - (4.7 * $raw_age);
     //คำนวณระดับกิจกรรม
-    if($activity_level == "น้อย") {
+    if($raw_activity_level == "น้อย") {
         $daily_calorie = $bmr * 1.375;
-    } elseif($activity_level == "ปานกลาง") {
+    } elseif($raw_activity_level == "ปานกลาง") {
         $daily_calorie = $bmr * 1.55;
-    } elseif($activity_level == "มาก") {
-        $daily_calorie = $bmr * 1.7;
+    } elseif($raw_activity_level == "มาก") {
+        $daily_calorie = $bmr * 1.725;
     }
 } else {
-	echo "Gender ".$gender." is not supported at this time."; 
+	echo "Gender ".$raw_gender." is not supported at this time."; 
 }
 
 
 // บันทึกข้อมูล
-$sql = "INSERT INTO profiles (users_id, gender, age, weight, height, diseases, activity_level, bmi, status_bmi, daily_calorie) 
-        VALUES ($user_id,'$gender','$age','$weight','$height','$diseases','$activity_level','$bmi','$status_bmi','$daily_calorie')";
+// สังเกตว่าค่าที่เป็นตัวเลข (age, weight, height, bmi, daily_calorie) ไม่จำเป็นต้องใส่ single quote หากคอลัมน์ใน DB เป็นชนิดตัวเลข
+$sql = "INSERT INTO profiles (users_id, gender, age, weight, height, diseases, activity_level, bmi, status_bmi, daily_calorie)
+        VALUES ($user_id, '$gender_db', $raw_age, $raw_weight, $raw_height, '$diseases_db', '$activity_level_db', $bmi, '$status_bmi', $daily_calorie)"; 
 
 if ($conn->query($sql) === TRUE) {
     echo "<script>

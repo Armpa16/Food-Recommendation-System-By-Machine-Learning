@@ -2,9 +2,6 @@ services:
   - type: web
     name: food-api
     env: python
-    buildCommand: ""
-    startCommand: gunicorn app:app
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn Flask_Api.app:app"
     plan: free
-    envVars:
-      - key: PORT
-        value: 10000

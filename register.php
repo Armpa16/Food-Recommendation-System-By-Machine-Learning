@@ -6,6 +6,7 @@
     <title>Register</title>
     <link rel="stylesheet" href="css/register.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="box_left">
@@ -51,21 +52,31 @@
                 <hr>&nbsp;&nbsp;&nbsp;&nbsp;มีบัญชีผู้ใช้แล้ว? ลงชื่อเข้าใช้&nbsp;&nbsp;&nbsp;&nbsp;<hr>
             </div><br><br>
             <a href="loginform.php">ลงชื่อเข้าใช้</a>
-            <?php
-                if(isset($_GET['status'])){
-                    //ตรวจสอบพบ error 
-                    echo "<script>";
-                    $status=$_GET['status'];
-                if($status==1){
-                    echo "alert(\"ไม่พบผู้ใช้งาน\")";
-                }else if($status==2) {
-                    //echo "alert(\"รหัสผ่านไม่ถูกต้อง\")";
-                    echo "alert(\"รหัสผ่านไม่ถูกต้อง\");";
+        </form>
+        <?php
+            if(isset($_GET['status'])){
+                $status = $_GET['status'];
+                $title = 'เกิดข้อผิดพลาด!';
+                $text = '';
+                $icon = 'error';
+
+                if($status == 1){ // User not found (likely from login redirect)
+                    $text = "ไม่พบผู้ใช้งานในระบบ";
+                } else if($status == 2) { // Incorrect password (likely from login redirect)
+                    $text = "รหัสผ่านไม่ถูกต้อง";
+                } else if($status == 'username_exists') {
+                    $text = "ชื่อผู้ใช้งานนี้มีอยู่ในระบบแล้ว กรุณาใช้ชื่ออื่น";
+                } else if($status == 'email_exists') {
+                    $text = "อีเมลนี้มีอยู่ในระบบแล้ว กรุณาใช้อีเมลอื่น";
+                } else if($status == 'password_mismatch') {
+                    $text = "รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน";
+                } // Add more specific registration errors as needed
+
+                if (!empty($text)) {
+                    echo "<script> Swal.fire({ title: '$title', text: '$text', icon: '$icon', confirmButtonText: 'ตกลง' }); </script>";
                 }
-                    echo "</script>";
-                }
-            ?>
-        </form>  
+            }
+        ?>
     </div>
     <!-- box_right-->
 

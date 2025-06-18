@@ -49,10 +49,10 @@ if (isset($_SESSION['username'])) {
             <div class="input_diseases">
                 <span>โรคประจำตัว:</span><br>
                 <!-- <input type="checkbox" name="diseases" value="ไม่มีโรค" required>&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp; -->
-                <input type="checkbox" name="diseases" value="ไม่มีโรค">&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp;
-                <input type="checkbox" name="diseases" value="โรคเบาหวาน">&nbsp; โรคเบาหวาน &nbsp;&nbsp;&nbsp;
-                <input type="checkbox" name="diseases" value="โรคความดันโลหิตสูง">&nbsp;โรคความดันโลหิตสูง &nbsp;&nbsp;&nbsp;
-                <input type="checkbox" name="diseases" value="โรคหัวใจ">&nbsp; โรคหัวใจ <br><br>
+                <input type="checkbox" name="diseases[]" value="ไม่มีโรค">&nbsp; ไม่มีโรค &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="diseases[]" value="โรคเบาหวาน">&nbsp; โรคเบาหวาน &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="diseases[]" value="โรคความดันโลหิตสูง">&nbsp;โรคความดันโลหิตสูง &nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="diseases[]" value="โรคหัวใจ">&nbsp; โรคหัวใจ <br><br>
             </div>
 
             <div class="input_activity_level">

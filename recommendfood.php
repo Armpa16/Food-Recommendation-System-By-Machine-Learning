@@ -72,6 +72,7 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
     <link rel="stylesheet" href="css/recommendfood.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
     <script>const loggedInUser = "<?php echo $username; ?>"; // ส่งค่าไปที่ JavaScript</script>
 </head>
 <body>
@@ -375,6 +376,10 @@ $conn->close();
                 </ul>
                 ${foodDetails.description ? `<p class="food-description">${foodDetails.description}</p>` : ''}
             </div>
+            <div class="nutrition-source" style="text-align: center; padding-top: 15px;">
+                <img src='https://nutrition2.anamai.moph.go.th/assets/app/images/logo.png' alt="กรมอนามัย สำนักโภชนาการ" style="height: 40px; vertical-align: middle; margin-right: 5px;">
+                <span style="vertical-align: middle;">กรมอนามัย สำนักโภชนาการ</span>
+            </div> 
         `;
 
         // เพิ่ม popup ไปยัง DOM
@@ -583,15 +588,15 @@ $conn->close();
                                         <h4 class="food-name">${food.food_name}</h4>
                                         <p class="food-calories">${food.calories} แคลอรี</p>
                                         <p class="food-nutrients">
-                                            🔥 ${food.calories} | 🥩 ${food.protein}g | 🍞 ${food.carbohydrate}g 
+                                            <i class="fa-solid fa-fire"></i> ${food.calories} kcal | <i class="fa-solid fa-drumstick-bite"></i> ${food.protein} g | <i class="fa-solid fa-bread-slice"></i> ${food.carbohydrate} g 
                                         </p>
                                         <div class="food-actions">
-                                            <span class="food-name">${food.food_name}</span>
                                             <span class="food-amount">${food.amount || '1 จาน'}</span>
                                         </div>
                                     </div>
                                 </div>
                             `;
+                            // <span class="food-name">${food.food_name}</span>
                             totalMealCalories += parseFloat(food.calories);
                         });
 
@@ -766,10 +771,9 @@ $conn->close();
                                                 <h4 class="food-name">${food.food_name}</h4>
                                                 <p class="food-calories">${food.calories} แคลอรี</p>
                                                 <p class="food-nutrients">
-                                                    🔥 ${food.calories} | 🥩 ${food.protein}g | 🍞 ${food.carbohydrate}g
+                                                    <i class="fa-solid fa-fire"></i> ${food.calories} kcal | <i class="fa-solid fa-drumstick-bite"></i> ${food.protein} g | <i class="fa-solid fa-bread-slice"></i> ${food.carbohydrate} g
                                                 </p>
                                                 <div class="food-actions">
-                                                    <span class="food-name">${food.food_name}</span>
                                                     <span class="food-amount">${food.amount || '1 จาน'}</span>
                                                 </div>
                                             </div>
@@ -1001,11 +1005,36 @@ $conn->close();
 
                 // เพิ่ม event listener สำหรับปุ่มเพิ่ม (submit)
                 submitBtn.addEventListener('click', () => {
-                    if (selectedFoods.length > 0) {
-                        // เพิ่มรายการอาหารที่เลือกไปยังหน้าหลัก
-                        addSelectedFoodsToMeal(selectedFoods, mealType);
+                    try {
+                        if (selectedFoods.length > 0) {
+                            // เพิ่มรายการอาหารที่เลือกไปยังหน้าหลัก
+                            addSelectedFoodsToMeal(selectedFoods, mealType);
+                        }
+                    } catch (e) {
+                        console.error("Error processing selected foods:", e);
+                        // คุณอาจต้องการแจ้งเตือนผู้ใช้หรือจัดการข้อผิดพลาดนี้
+                    } finally {
+                        // บล็อกนี้จะทำงานเสมอ แม้ว่าจะเกิดข้อผิดพลาดใน try block
+                        // ตรวจสอบให้แน่ใจว่า overlay ยังคงอยู่และเป็นลูกของ document.body ก่อนที่จะพยายามลบ
+                        if (overlay && overlay.parentNode === document.body) {
+                            try {
+                                document.body.removeChild(overlay);
+                            } catch (removeError) {
+                                console.error("Error removing popup overlay:", removeError);
+                            }
+                        } else if (overlay && overlay.parentNode) {
+                            console.warn("Popup overlay was not a direct child of document.body. Attempting removal from parent:", overlay.parentNode);
+                            try {
+                                overlay.parentNode.removeChild(overlay); // พยายามลบจาก parent node จริงของมัน
+                            } catch (removeError) {
+                                console.error("Error removing popup overlay from its parent:", removeError);
+                            }
+                        } else {
+                            console.warn("Popup overlay not found or has no parent when trying to close.");
+                        }
                     }
-                    document.body.removeChild(overlay);
+                    // ปิด popup หลังจากเพิ่มอาหาร
+                    // document.body.removeChild(overlay);
                 });
                 
                 let currentFoodType = 'suitable'; // ค่าเริ่มต้น
@@ -1117,17 +1146,16 @@ $conn->close();
                             <h4 class="food-name">${meal.food_name}</h4>
                             <p class="food-calories">${meal.calories} แคลอรี</p>
                             <p class="food-nutrients">
-                                🔥 ${meal.calories} | 🥩 ${meal.protein}g | 🍞 ${meal.carbohydrate}g 
+                                <i class="fa-solid fa-fire"></i> ${meal.calories} kcal | <i class="fa-solid fa-drumstick-bite"></i> ${meal.protein} g | <i class="fa-solid fa-bread-slice"></i> ${meal.carbohydrate} g 
                             </p>
                             <div class="food-actions">
-                                <span class="food-name">${meal.food_name}</span>
                                 <span class="food-amount">${meal.amount}</span>
                             </div>
                         </div>
                     </div>
                 `;
             });
-
+            // <span class="food-name">${meal.food_name}</span>
             categoryContainer.innerHTML += mealItemsHTML;  // เพิ่มการ์ดอาหารลงใน category
             container.appendChild(categoryContainer);
 
@@ -1138,45 +1166,47 @@ $conn->close();
                     const foodId = this.getAttribute('data-food-id');
                     const foodCard = this.closest('.food-card');
                     
-                    // ดึงข้อมูลอาหารที่จำเป็น
-                    const foodName = foodCard.querySelector('.food-name').textContent;
-                    const calories = parseFloat(foodCard.querySelector('.food-calories').textContent);
-                    const foodNutrients = foodCard.querySelector('.food-nutrients').textContent;
-                    const foodAmount = foodCard.querySelector('.food-amount') ? foodCard.querySelector('.food-amount').textContent : '1 จาน';
-                    const imageUrl = foodCard.querySelector('.food-image').src;
-                    
-                    // แยกข้อมูลโปรตีนและคาร์โบไฮเดรตจาก foodNutrients
-                    const proteinMatch = foodNutrients.match(/🥩\s*(\d+(\.\d+)?)/);
-                    const carbMatch = foodNutrients.match(/🍞\s*(\d+(\.\d+)?)/);
-                    
-                    const protein = proteinMatch ? proteinMatch[1] : '0';
-                    const carbohydrate = carbMatch ? carbMatch[1] : '0';
-                    
-                    // ตรวจสอบว่าอาหารนี้ถูกเลือกแล้วหรือไม่
-                    const existingIndex = selectedFoods.findIndex(food => food.food_id === foodId);
-                    
-                    if (existingIndex >= 0) {
-                        // ถ้าเลือกแล้ว ให้ลบออก
-                        selectedFoods.splice(existingIndex, 1);
-                        this.classList.remove('selected');
-                        this.innerHTML = '<i class="fa-solid fa-plus"></i>';
+                    // Find the original meal object from the 'meals' array (passed to renderMealSet)
+                    const originalMealData = meals.find(m => m.food_id == foodId); // Use == for potential type flexibility
+
+                    if (originalMealData) {
+                        const foodName = originalMealData.food_name;
+                        const calories = originalMealData.calories;
+                        const protein = originalMealData.protein;
+                        const carbohydrate = originalMealData.carbohydrate;
+                        const amount = originalMealData.amount || '1 จาน'; // Default if amount is not present
+                        const imageUrl = originalMealData.image_url;
+
+                        // ตรวจสอบว่าอาหารนี้ถูกเลือกแล้วหรือไม่
+                        const existingIndex = selectedFoods.findIndex(food => food.food_id === foodId);
+
+                        if (existingIndex >= 0) {
+                            // ถ้าเลือกแล้ว ให้ลบออก
+                            selectedFoods.splice(existingIndex, 1);
+                            this.classList.remove('selected');
+                            this.innerHTML = '<i class="fa-solid fa-plus"></i>';
+                        } else {
+                            // ถ้ายังไม่ได้เลือก ให้เพิ่มเข้าไป
+                            selectedFoods.push({
+                                food_id: foodId,
+                                food_name: foodName,
+                                calories: parseFloat(calories),
+                                protein: parseFloat(protein),
+                                carbohydrate: parseFloat(carbohydrate),
+                                amount: amount,
+                                image_url: imageUrl
+                            });
+                            this.classList.add('selected');
+                            this.innerHTML = '<i class="fa-solid fa-check"></i>';
+                        }
+                        // อัพเดทจำนวนที่เลือกบนปุ่ม "เพิ่ม"
+                        updateSelectedCount(selectedFoods.length, popup);
                     } else {
-                        // ถ้ายังไม่ได้เลือก ให้เพิ่มเข้าไป
-                        selectedFoods.push({
-                            food_id: foodId,
-                            food_name: foodName,
-                            calories: calories,
-                            protein: protein,
-                            carbohydrate: carbohydrate,
-                            amount: foodAmount,
-                            image_url: imageUrl
-                        });
-                        this.classList.add('selected');
-                        this.innerHTML = '<i class="fa-solid fa-check"></i>';
+                        console.error(`Meal data not found for food_id: ${foodId} in popup selection.`);
                     }
                     
                     // อัพเดทจำนวนที่เลือกบนปุ่ม "เพิ่ม"
-                    updateSelectedCount(selectedFoods.length, popup);
+                    // updateSelectedCount(selectedFoods.length, popup);
                 });
             });
         }
@@ -1225,6 +1255,8 @@ $conn->close();
                 foodElement.className = 'food-card';
                 foodElement.setAttribute('data-food-id', food.food_id);
                 // เพิ่ม data-calories เพื่อใช้ในการคำนวณเมื่อลบ
+                foodElement.setAttribute('data-protein', food.protein || 0);
+                foodElement.setAttribute('data-carbohydrate', food.carbohydrate || 0);
                 foodElement.setAttribute('data-calories', food.calories);
 
                 foodElement.innerHTML = `
@@ -1234,10 +1266,9 @@ $conn->close();
                         <h4 class="food-name">${food.food_name}</h4>
                         <p class="food-calories">${food.calories} แคลอรี</p>
                         <p class="food-nutrients">
-                            🔥 ${food.calories} | 🥩 ${food.protein}g | 🍞 ${food.carbohydrate}g 
+                            <i class="fa-solid fa-fire"></i> ${food.calories} kcal | <i class="fa-solid fa-drumstick-bite"></i> ${food.protein} g | <i class="fa-solid fa-bread-slice"></i> ${food.carbohydrate} g 
                         </p>
                         <div class="food-actions">
-                            <span class="food-name">${food.food_name}</span>
                             <span class="food-amount">${food.amount}</span>
                         </div>
                     </div>
@@ -1379,13 +1410,19 @@ $conn->close();
             const mealsData = collectMealData();
 
             if (!mealsData || Object.keys(mealsData).length === 0) {
-                alert("ไม่มีข้อมูลอาหาร กรุณาเลือกเมนู!");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'ไม่มีข้อมูล',
+                    text: 'ไม่มีข้อมูลอาหาร กรุณาเลือกเมนู!',
+                    confirmButtonText: 'ตกลง'
+                });
                 return;
             }
 
             checkSavedMeals(username, date)
                 .then(hasSavedMeals => {
                     // ส่งข้อมูลไปยัง api เพื่อบันทึกข้อมูลอาหาร
+                    showLoadingPopup(); // แสดง loading popup ก่อนเริ่ม fetch
                     let apiUrl = 'http://127.0.0.1:5000/save_meals';
                     if (hasSavedMeals) {
                         // ถ้ามีบันทึกแล้ว ไป api อัพเดท
@@ -1404,21 +1441,47 @@ $conn->close();
                     })
                     .then(response => response.json())
                     .then(data => {
+                        hideLoadingPopup(); // ซ่อน loading popup หลัง fetch เสร็จ
                         if (data.success) {
-                            alert("บันทึกสำเร็จ!");
-                            // window.location.reload();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'บันทึกสำเร็จ!',
+                                text: 'ข้อมูลอาหารของคุณถูกบันทึกเรียบร้อยแล้ว',
+                                confirmButtonText: 'ตกลง'
+                            }).then(() => {
+                                // Optional: รีโหลดหน้าหรืออัปเดต UI ตามต้องการ
+                                // window.location.reload(); 
+                                loadFoodDataForSelectedDate(new Date(date)); // โหลดข้อมูลใหม่สำหรับวันที่บันทึก (ใช้ตัวแปร date ที่ถูกต้อง)
+                            });
                         } else {
-                            alert("เกิดข้อผิดพลาด: " + data.error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'เกิดข้อผิดพลาด',
+                                text: data.error || 'ไม่สามารถบันทึกข้อมูลได้',
+                                confirmButtonText: 'ตกลง'
+                            });
                         }
                     })
                     .catch(error => {
+                        hideLoadingPopup(); // ซ่อน loading popup หากเกิด error
                         console.error("Error:", error);
-                        alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: 'เกิดข้อผิดพลาดในการส่งข้อมูลไปยังเซิร์ฟเวอร์',
+                            confirmButtonText: 'ตกลง'
+                        });
                     });
                 })
                 .catch(error => {
+                    hideLoadingPopup(); // ซ่อน loading popup หากเกิด error ใน checkSavedMeals
                     console.error('Error checking saved meals:', error);
-                    alert("เกิดข้อผิดพลาดในการตรวจสอบข้อมูล");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'เกิดข้อผิดพลาดในการตรวจสอบข้อมูลที่บันทึกไว้',
+                        confirmButtonText: 'ตกลง'
+                    });
                 });
         }
         
@@ -1434,8 +1497,8 @@ $conn->close();
                         food_id: foodElement.dataset.foodId || null, 
                         food_name: foodElement.querySelector(".food-name").textContent,
                         calories: parseFloat(foodElement.dataset.calories) || 0,
-                        protein: parseFloat(foodElement.querySelector(".food-nutrients").textContent.match(/🥩\s*(\d+(\.\d+)?)/)[1]) || 0,
-                        carbohydrate: parseFloat(foodElement.querySelector(".food-nutrients").textContent.match(/🍞\s*(\d+(\.\d+)?)/)[1]) || 0,
+                        protein: parseFloat(foodElement.dataset.protein) || 0,
+                        carbohydrate: parseFloat(foodElement.dataset.carbohydrate) || 0,
                         amount: foodElement.querySelector(".food-amount").textContent || "1 จาน",
                         image_url: foodElement.querySelector(".food-image").src
                     };
